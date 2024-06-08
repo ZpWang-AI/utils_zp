@@ -5,46 +5,50 @@ from pathlib import Path as path
 
 
 class AttrDict(dict):
-    def __setitem__(self, key: str, value):
-        self.__setattr__(key, value)
-        
     def __setattr__(self, __name: str, __value) -> None:
         self.__dict__[__name] = __value
         super().__setitem__(__name, __value)
-    
-    def __repr__(self):
-        target_dic = {}
-        for k,v in self.items():
-            if k.startswith('_'):
-                continue
-            try:
-                json.dumps(v)
-                target_dic[k] = v
-                continue
-            except:
-                pass
-            try:
-                target_dic[k] = str(v)
-                continue
-            except:
-                pass
-            raise TypeError(f'wrong type\n{k}: {v}\n{type(v)}')
-        return json.dumps(target_dic, ensure_ascii=False, indent=4)
         
+    def __setitem__(self, key: str, value):
+        self.__setattr__(key, value)
+    
     def set_create_time(self, create_time=None):
         if not create_time:
             self.create_time = datetime.datetime.now().strftime('%Y-%m-%d-%H-%M-%S')
         else:
             self.create_time = create_time
-    
-    def merge_dict(self, dic:dict, force=False):
-        if force:
+            
+    @property
+    def json(self):
+        json_dic = {}
+        for k,v in self.items():
+            if k.startswith('_'):
+                continue
+            try:
+                json.dumps(v)
+                json_dic[k] = v
+                continue
+            except:
+                pass
+            try:
+                json_dic[k] = str(v)
+                continue
+            except:
+                pass
+            raise TypeError(f'wrong type\n{k}: {v}\n{type(v)}')
+        return json_dic
+        
+    def __repr__(self):
+        return json.dumps(self.json, ensure_ascii=False, indent=4)
+        
+    def merge_dict(self, dic:dict, overwrite_existing=False):
+        if overwrite_existing:
             for k, v in dic.items():
                 self[k] = v
         else:
             for k, v in dic.items():
                 if k in self:
-                    self[k] = v        
+                    self[k] = v
     
     @classmethod
     def from_dict(cls, dic:dict, force=True, **kwargs):
