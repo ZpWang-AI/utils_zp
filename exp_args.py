@@ -20,8 +20,11 @@ class ExpArgs(AttrDict):
         self.part1 = 'base_setting'
         self.desc = 'test'
         
+        self._version_info_list = []
+        
     @property
     def version(self):
+        return '.'.join(self._version_info_list)
         raise "TODO version"
     
     def format_part(self):    
