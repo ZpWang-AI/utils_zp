@@ -1,8 +1,11 @@
-import os
+import os, sys
 import json
+import re
 
 from typing import *
 from pathlib import Path as path
+
+# sys.path.insert(0, str(path(__file__).parent.parent))
 
 from utils.attr_dic import AttrDict
 
@@ -37,10 +40,10 @@ class ExpArgs(AttrDict):
         prefix_space = ' '*8
         target_lines:List[str] = []
         for line in lines:
-            if line.strip().startswith('self.part'):
+            if re.match(r'^\s+self\.part\d*\s*=', line):
                 part_val = line.split('=')[-1].strip()
                 comment = f'{prefix_space}# {fill_with_delimiter(part_val)}\n'
-                if target_lines[-1].strip()[0] == '#':
+                if re.match(r'^\s*#', target_lines[-1]):
                     target_lines[-1] = comment
                 else:
                     target_lines.append(comment)
@@ -57,5 +60,5 @@ if __name__ == '__main__':
     # sample_args = CustomArgs(test_setting=False)
     # print(sample_args)
     
-    # CustomArgs.format_args_part_in_file(__file__)
+    ExpArgs.format_part_in_file(__file__)
     pass
