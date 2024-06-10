@@ -74,48 +74,50 @@ class GPUManager:
         return free_cuda_ids
 
 
-# class GPUOccupier:
-#     @staticmethod
-#     def _occupy_one_gpu(cuda_id, target_mem_mb=8000):
-#         import torch
-#         '''
-#         < release by following >
-#         gpustat -cpu
-#         kill -9 <num>
-#         '''
-#         device = torch.device(f'cuda:{cuda_id}')
-#         used_mem = GPUManager.query_gpu_memory(cuda_id=cuda_id, show=False)[1]
-#         used_mem_mb = used_mem/(1024**2)
-#         one_gb = torch.zeros(224*1024**2)  # about 951mb
-#         gb_cnt = int((target_mem_mb-used_mem_mb)/1024)
-#         if gb_cnt < 0:
-#             return
-#         lst = [one_gb.detach().to(device) for _ in range(gb_cnt+1)]
-#         while 1:
-#             time.sleep(2**31)
+"""
+class GPUOccupier:
+    @staticmethod
+    def _occupy_one_gpu(cuda_id, target_mem_mb=8000):
+        import torch
+        '''
+        < release by following >
+        gpustat -cpu
+        kill -9 <num>
+        '''
+        device = torch.device(f'cuda:{cuda_id}')
+        used_mem = GPUManager.query_gpu_memory(cuda_id=cuda_id, show=False)[1]
+        used_mem_mb = used_mem/(1024**2)
+        one_gb = torch.zeros(224*1024**2)  # about 951mb
+        gb_cnt = int((target_mem_mb-used_mem_mb)/1024)
+        if gb_cnt < 0:
+            return
+        lst = [one_gb.detach().to(device) for _ in range(gb_cnt+1)]
+        while 1:
+            time.sleep(2**31)
             
-#     @staticmethod
-#     def wait_and_occupy_free_gpu(
-#         target_mem_mb=8000,
-#         wait_gap=5,
-#         show_waiting=False,
-#         device_range=None, 
-#     ):
-#         if not device_range:
-#             device_range = GPUManager.get_all_cuda_id()
-#         cuda_id = GPUManager.get_free_gpu(
-#             target_mem_mb=target_mem_mb,
-#             force=False,
-#             wait=True,
-#             wait_gap=wait_gap,
-#             show_waiting=show_waiting,
-#             device_range=device_range,
-#         )
-#         GPUManager._occupy_one_gpu(
-#             cuda_id=cuda_id,
-#             target_mem_mb=target_mem_mb,
-#         )
-        
+    @staticmethod
+    def wait_and_occupy_free_gpu(
+        target_mem_mb=8000,
+        wait_gap=5,
+        show_waiting=False,
+        device_range=None, 
+    ):
+        if not device_range:
+            device_range = GPUManager.get_all_cuda_id()
+        cuda_id = GPUManager.get_free_gpu(
+            target_mem_mb=target_mem_mb,
+            force=False,
+            wait=True,
+            wait_gap=wait_gap,
+            show_waiting=show_waiting,
+            device_range=device_range,
+        )
+        GPUManager._occupy_one_gpu(
+            cuda_id=cuda_id,
+            target_mem_mb=target_mem_mb,
+        )
+"""
+
 
 class GPUMemoryMonitor:
     def __init__(self, cuda_ids:List[int], save_path, monitor_gap=3) -> None:

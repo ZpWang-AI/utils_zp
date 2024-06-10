@@ -33,8 +33,7 @@ def main():
         long_description_content_type='text/markdown',
         package_dir={'': 'src'},
         packages=setuptools.find_packages('src'),
-        # data_files=['requirements.txt'],
-        # install_requires=required,
+        install_requires=required,
     )
 
 
