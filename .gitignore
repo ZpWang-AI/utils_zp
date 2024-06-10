@@ -18,7 +18,10 @@ nohup.out
 
 # ==============================
 
+/*
 !/.gitignore
+!/setup.py
+!/VERSION
 !/README.md
 !/requirements.txt
 !/src
@@ -26,6 +29,7 @@ nohup.out
 
 # src
 src/scripts
+src/*.egg-info
 !src/model/_test_model.py
 !src/data/_test_data.py
 
