@@ -25,7 +25,7 @@ nohup.out
 !/README.md
 !/requirements.txt
 !/src
-!/utils
+!/utils_zp
 
 # src
 src/scripts

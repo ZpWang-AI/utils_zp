@@ -7,7 +7,7 @@ from pathlib import Path as path
 
 # sys.path.insert(0, str(path(__file__).parent.parent))
 
-from utils.attr_dic import AttrDict
+from .attr_dic import AttrDict
 
 
 def fill_with_delimiter(s:str):

@@ -1,7 +1,7 @@
 import setuptools
 
 
-package_name = 'utils'
+package_name = 'utils_zp'
 
 
 def get_version():
