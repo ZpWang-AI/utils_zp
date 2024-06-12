@@ -1,4 +1,5 @@
 import json
+import yaml
 import datetime
 
 from pathlib import Path as path
@@ -37,7 +38,11 @@ class AttrDict(dict):
                 pass
             raise TypeError(f'wrong type\n{k}: {v}\n{type(v)}')
         return json_dic
-        
+
+    @property
+    def yaml(self):
+        return self.json
+    
     def __repr__(self):
         return json.dumps(self.json, ensure_ascii=False, indent=4)
         
@@ -51,10 +56,10 @@ class AttrDict(dict):
                     self[k] = v
     
     @classmethod
-    def from_dict(cls, dic:dict, force=True, **kwargs):
+    def from_dict(cls, dic:dict, overwrite_existing=True, **kwargs):
         instance = cls()
-        instance.merge_dict(dic, force=force)
-        instance.merge_dict(kwargs, force=force)
+        instance.merge_dict(dic, overwrite_existing=overwrite_existing)
+        instance.merge_dict(kwargs, overwrite_existing=overwrite_existing)
         return instance
 
     def dump_json(self, json_path, overwrite=True):
@@ -65,8 +70,22 @@ class AttrDict(dict):
                 f.write(str(self)+'\n')
     
     @classmethod
-    def load_json(cls, json_path, force=True):
+    def load_json(cls, json_path, overwrite_existing=True):
         json_path = path(json_path)
         with open(json_path, 'r', encoding='utf8')as f:
             dic = json.load(f)
-        return cls.from_dict(dic, force=force)
+        return cls.from_dict(dic, overwrite_existing=overwrite_existing)
+
+    def dump_yaml(self, yaml_path, overwrite=True):
+        yaml_path = path(yaml_path)
+        yaml_path.parent.mkdir(parents=True, exist_ok=True)
+        if not yaml_path.exists() or overwrite:
+            with open(yaml_path, 'w', encoding='utf8')as f:
+                yaml.dump(self.yaml, f)
+    
+    @classmethod
+    def load_yaml(cls, yaml_path, overwrite_existing=True):
+        yaml_path = path(yaml_path)
+        with open(yaml_path, 'r', encoding='utf8')as f:
+            dic = yaml.load(f, Loader=yaml.FullLoader)
+        return cls.from_dict(dic, overwrite_existing=overwrite_existing)
