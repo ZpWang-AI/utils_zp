@@ -10,11 +10,11 @@ from collections import defaultdict
 def make_path(dir_path=None, file_path=None):
     if file_path is not None:
         file_path = path(file_path)
-        file_or_dir_path.parent.mkdir(parents=True, exist_ok=True)
-        file_or_dir_path.touch()
+        file_path.parent.mkdir(parents=True, exist_ok=True)
+        file_path.touch()
     if dir_path is not None:
         dir_path = path(dir_path)
-        file_or_dir_path.mkdir(parents=True, exist_ok=True)
+        dir_path.mkdir(parents=True, exist_ok=True)
 
 
 def dump_json(target, file_path, mode='w', indent=None):
