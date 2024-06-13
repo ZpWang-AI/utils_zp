@@ -7,12 +7,13 @@ from pathlib import Path as path
 from collections import defaultdict
 
 
-def make_path(file_or_dir_path):
-    file_or_dir_path = path(file_or_dir_path)
-    if file_or_dir_path.is_file():
+def make_path(dir_path=None, file_path=None):
+    if file_path is not None:
+        file_path = path(file_path)
         file_or_dir_path.parent.mkdir(parents=True, exist_ok=True)
         file_or_dir_path.touch()
-    else:
+    if dir_path is not None:
+        dir_path = path(dir_path)
         file_or_dir_path.mkdir(parents=True, exist_ok=True)
 
 
