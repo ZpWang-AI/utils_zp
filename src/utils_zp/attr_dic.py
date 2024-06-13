@@ -81,7 +81,7 @@ class AttrDict(dict):
         yaml_path.parent.mkdir(parents=True, exist_ok=True)
         if not yaml_path.exists() or overwrite:
             with open(yaml_path, 'w', encoding='utf8')as f:
-                yaml.dump(self.yaml, f)
+                yaml.dump(self.yaml, f, sort_keys=False)
     
     @classmethod
     def load_yaml(cls, yaml_path, overwrite_existing=True):
