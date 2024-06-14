@@ -6,5 +6,5 @@ def set_process_title(title, prefix='zp_', add_time=False):
     process_title = f'{prefix}{title}'
     if add_time:
         process_title += '_'+get_cur_time('%Y.%m.%d-%H:%M:%S')
-    setproctitle(f'{prefix}{title}')
+    setproctitle(process_title)
     
