@@ -18,10 +18,13 @@ def make_path(dir_path=None, file_path=None):
 
 
 def dump_json(target, file_path, mode='w', indent=None):
+    target_str = json.dumps(target, ensure_ascii=False, indent=indent,)
     with open(file_path, mode=mode, encoding='utf8')as f:
-        json.dump(target, f, indent=indent, ensure_ascii=False)
-        if mode == 'a':
-            f.write('\n')
+        f.write(target_str+'\n')
+    return target_str
+        # json.dump(target, f, indent=indent, ensure_ascii=False)
+        # if mode == 'a':
+        #     f.write('\n')
 
 
 def load_json(file_path):
