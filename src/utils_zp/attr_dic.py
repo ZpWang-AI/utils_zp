@@ -25,6 +25,9 @@ class AttrDict(dict):
         for k,v in self.items():
             if k.startswith('_'):
                 continue
+            if isinstance(v, AttrDict):
+                json_dic[k] = v.json
+                continue
             try:
                 json.dumps(v)
                 json_dic[k] = v
