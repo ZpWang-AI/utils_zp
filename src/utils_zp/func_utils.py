@@ -4,6 +4,10 @@ import json
 from collections import defaultdict
 
 
+def print_sep(sep='-', num=20):
+    print(sep*num)
+
+
 def clock_decorator(func):
     def new_func(*args, **kwargs):
         print(f'{func.__name__} starts')
