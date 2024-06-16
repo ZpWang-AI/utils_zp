@@ -1,12 +1,25 @@
 import datetime, time
 import json
+import os, sys
 
+from pathlib import Path as path
 from collections import defaultdict
 
 
 def print_sep(sep='-', num=20):
     print(sep*num)
 
+
+def add_sys_path(cur_path, to_parent_num=0, insert_to_head=True):
+    cur_path = path(cur_path)
+    for _ in range(to_parent_num):
+        cur_path = cur_path.parent
+    cur_path = str(cur_path)
+    if insert_to_head:
+        sys.path.insert(0, cur_path)
+    else:
+        sys.path.append(cur_path)
+        
 
 def clock_decorator(func):
     def new_func(*args, **kwargs):
