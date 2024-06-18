@@ -1,4 +1,5 @@
 import numpy as np
+import pandas as pd
 
 from typing import *
 from matplotlib import pyplot as plt
@@ -40,4 +41,22 @@ def mark_extremum(
         mid = np.argmin(y)
         plt.text(x[mid], y[mid], str(format_y_func(y[mid])))
         
+
+def plot_hist(data, bins, fig_path):
+    pd.Series(data).hist(bins=bins)
+    plt.xlabel('Value')
+    plt.ylabel('Frequency')
+    plt.grid(True)
+    plt.savefig(fig_path)
+    plt.close()
     
+
+def visualize_1d_matrix(matrix, fig_path):
+    x, y = list(range(len(matrix))), sorted(matrix)
+    plt.scatter(x, y,)
+    mark_extremum(x,y,True,True)
+    
+    plt.xlabel('Index')
+    plt.ylabel('Value')
+    plt.grid(True)
+    plt.savefig(fig_path)
