@@ -19,6 +19,8 @@ def postprocess_generation_res_to_lid(
             label_list = sorted(set(pred))
         else:
             raise Exception('pred, gt and label_list not exist')
+    if out_of_range_lid is None:
+        out_of_range_lid = len(label_list)
     
     out_of_range_score = -1000
     if match_strategy == 'complete':
