@@ -17,14 +17,16 @@ def make_path(dir_path=None, file_path=None):
         dir_path.mkdir(parents=True, exist_ok=True)
 
 
-def dump_json(target, file_path, mode='w', indent=None):
+def dump_json(target, file_path, mode='w', indent=None, auto_indent=True):
+    if auto_indent:
+        if mode == 'w':
+            indent = 4
+        elif mode == 'a':
+            indent = None
     target_str = json.dumps(target, ensure_ascii=False, indent=indent,)
     with open(file_path, mode=mode, encoding='utf8')as f:
         f.write(target_str+'\n')
     return target_str
-        # json.dump(target, f, indent=indent, ensure_ascii=False)
-        # if mode == 'a':
-        #     f.write('\n')
 
 
 def load_json(file_path):

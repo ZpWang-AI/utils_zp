@@ -7,6 +7,7 @@ def postprocess_generation_res_to_lid(
     label_list:Iterable[str]=None, 
     match_strategy:Literal['complete', 'first exists', 'last exists']='complete',
     out_of_range_lid:int=None,
+    lower_results=False,
 ) -> dict:
     if pred is not None:
         pred = list(pred)
@@ -25,12 +26,18 @@ def postprocess_generation_res_to_lid(
     out_of_range_score = -1000
     if match_strategy == 'complete':
         def score_func(x, label):
+            if lower_results:
+                x, label = x.lower(), label.lower()
             return 1 if x == label else out_of_range_score
     elif match_strategy == 'first exists':
         def score_func(x, label):
+            if lower_results:
+                x, label = x.lower(), label.lower()
             return x.index(label) if label in x else out_of_range_score
     elif match_strategy == 'last exists':
         def score_func(x, label):
+            if lower_results:
+                x, label = x.lower(), label.lower()
             x, label = x[::-1], label[::-1]
             return x.index(label) if label in x else out_of_range_score
     
