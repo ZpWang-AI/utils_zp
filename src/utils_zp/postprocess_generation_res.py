@@ -11,8 +11,13 @@ def postprocess_generation_res_to_lid(
 ) -> dict:
     if pred is not None:
         pred = list(pred)
+    else:
+        pred = []
     if gt is not None:
         gt = list(gt)
+    else:
+        gt = []
+        
     if not label_list:
         if gt:
             label_list = sorted(set(gt))
@@ -20,6 +25,7 @@ def postprocess_generation_res_to_lid(
             label_list = sorted(set(pred))
         else:
             raise Exception('pred, gt and label_list not exist')
+
     if out_of_range_lid is None:
         out_of_range_lid = len(label_list)
     
