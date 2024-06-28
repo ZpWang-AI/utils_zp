@@ -1,7 +1,9 @@
 import datetime, time
 import json
 import os, sys
+import pandas as pd
 
+from typing import *
 from pathlib import Path as path
 from collections import defaultdict
 
@@ -19,7 +21,23 @@ def add_sys_path(cur_path, to_parent_num=0, insert_to_head=True):
         sys.path.insert(0, cur_path)
     else:
         sys.path.append(cur_path)
-        
+
+
+def build_dict_from_df_or_dicts(
+    df_or_dicts:Union[pd.DataFrame, Iterable[dict]],
+    key_col_name:str, val_col_name:str,
+):
+    if isinstance(df_or_dicts, pd.DataFrame):
+        return dict(zip(
+            df_or_dicts[key_col_name], df_or_dicts[val_col_name],
+        ))
+    else:
+        key_col, val_col = [], []
+        for dic in df_or_dicts:
+            key_col.append(dic[key_col_name])
+            val_col.append(dic[val_col_name])
+        return dict(zip(key_col, val_col))
+    
 
 def clock_decorator(func):
     def new_func(*args, **kwargs):
