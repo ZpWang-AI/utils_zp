@@ -48,6 +48,7 @@ def postprocess_generation_res_to_lid(
             return x.index(label) if label in x else out_of_range_score
     
     def process_to_lid(x, label_list):
+        x = str(x)
         x_lid = max(
             range(len(label_list)), 
             key=lambda lid:(score_func(x, label_list[lid]), len(label_list[lid]))
