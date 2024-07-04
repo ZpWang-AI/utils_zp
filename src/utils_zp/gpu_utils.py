@@ -124,10 +124,14 @@ class GPUBalancer:
             'e=5': 1,
         }
         for e, b_mem, pid in zip([7,5], [80,1], [0,1]):
-            while GPUManager.query_gpu_mem_mb_target(
-                cuda_id=cuda_id, target='used'
-            ) < self.target_mem_mb-b_mem:
-                tensor_stack[pid].append(fill_tensor(e))
+            try:
+                while GPUManager.query_gpu_mem_mb_target(
+                    cuda_id=cuda_id, target='used'
+                ) < self.target_mem_mb-b_mem:
+                    new_tensor = fill_tensor(e)
+                    tensor_stack[pid].append(new_tensor)
+            except torch.cuda.OutOfMemoryError:
+                pass
         for e, b_mem, pid in zip([7,5], [78,1], [0,1]):
             while tensor_stack[pid] and GPUManager.query_gpu_mem_mb_target(
                 cuda_id=cuda_id, target='used'
