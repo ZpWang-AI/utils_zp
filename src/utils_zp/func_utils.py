@@ -76,7 +76,12 @@ def format_element_to_shape(target, json_indent=True):
         try:
             target = list(target)
             res = [format_element_to_shape(p, False)for p in target]
+            if res and all(res[0]==p for p in res):
+                res = f'(*{len(res)}, {res[0]})'
         except:
+            # from traceback import format_exc
+            # print(format_exc())
+            print(target)
             raise Exception(f'wrong type {type(target)}')
     return json.dumps(res, indent=4) if json_indent else res
     
@@ -88,3 +93,4 @@ if __name__ == '__main__':
         
     
     f()
+    
