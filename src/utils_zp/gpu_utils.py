@@ -73,50 +73,97 @@ class GPUManager:
         print(f'=== CUDA {free_cuda_ids} ===')
         return free_cuda_ids
 
+    @staticmethod
+    def query_gpu_mem_mb_target(cuda_id:int, target:Literal['free', 'used', 'total']):
+        return norm_mem_to_mb(
+            GPUManager.query_gpu_memory(cuda_id=cuda_id, show=False)[target]
+        )
 
-"""
-class GPUOccupier:
-    @staticmethod
-    def _occupy_one_gpu(cuda_id, target_mem_mb=8000):
+
+class GPUBalancer:
+    def __init__(self, cuda_ids:List[int]=None, rest_mem_mb=None, target_mem_mb=None, keep_run=False, refresh_gap=0.1, wait_before_start=10) -> None:
+        if cuda_ids is not None:
+            self.cuda_ids = cuda_ids
+        else:
+            self.cuda_ids = [0]
+        
+        if rest_mem_mb is not None:
+            self.target_mem_mb = GPUManager.query_gpu_mem_mb_target(
+                cuda_id=self.cuda_ids[0], target='total'
+            ) - rest_mem_mb
+        elif target_mem_mb is not None:
+            self.target_mem_mb = target_mem_mb
+        else:
+            raise "rest_mem_mb and target_mem_mb are all None"
+        
+        self.keep_balance = True
+        self.keep_run = keep_run
+        self.refresh_gap = refresh_gap
+        
+        self.balance_process = threading.Thread(
+            target=self.balance, daemon=True,
+        )
+        self.run_process_list = [threading.Thread(
+            target=self.run, daemon=True, kwargs={'cuda_id': cuda_id})
+            for cuda_id in self.cuda_ids
+        ]
+        time.sleep(wait_before_start)
+        self.balance_process.start()
+        for process in self.run_process_list:
+            process.start()
+    
+    def _balance_one_gpu(self, cuda_id, tensor_stack):
         import torch
-        '''
-        < release by following >
-        gpustat -cpu
-        kill -9 <num>
-        '''
-        device = torch.device(f'cuda:{cuda_id}')
-        used_mem = GPUManager.query_gpu_memory(cuda_id=cuda_id, show=False)[1]
-        used_mem_mb = used_mem/(1024**2)
-        one_gb = torch.zeros(224*1024**2)  # about 951mb
-        gb_cnt = int((target_mem_mb-used_mem_mb)/1024)
-        if gb_cnt < 0:
-            return
-        lst = [one_gb.detach().to(device) for _ in range(gb_cnt+1)]
-        while 1:
-            time.sleep(2**31)
+        device = f'cuda:{cuda_id}'
+        def fill_tensor(e):
+            return torch.arange(1, 10**e, device=device)
+        {
+            'e=8': 764,
+            'e=7': 78, 
+            'e=6': 10,
+            'e=5': 1,
+        }
+        for e, b_mem, pid in zip([7,5], [80,1], [0,1]):
+            while GPUManager.query_gpu_mem_mb_target(
+                cuda_id=cuda_id, target='used'
+            ) < self.target_mem_mb-b_mem:
+                tensor_stack[pid].append(fill_tensor(e))
+        for e, b_mem, pid in zip([7,5], [78,1], [0,1]):
+            while tensor_stack[pid] and GPUManager.query_gpu_mem_mb_target(
+                cuda_id=cuda_id, target='used'
+            )-b_mem >= self.target_mem_mb:
+                tensor_stack[pid].pop()
+                torch.cuda.empty_cache()
+
+    def balance(self):
+        tensor_stacks = [
+            [[], []]
+            for _ in self.cuda_ids
+        ]
+        while self.keep_balance:
+            for pid, cuda_id in enumerate(self.cuda_ids):
+                self._balance_one_gpu(
+                    cuda_id=cuda_id, 
+                    tensor_stack=tensor_stacks[pid]
+                )
             
-    @staticmethod
-    def wait_and_occupy_free_gpu(
-        target_mem_mb=8000,
-        wait_gap=5,
-        show_waiting=False,
-        device_range=None, 
-    ):
-        if not device_range:
-            device_range = GPUManager.get_all_cuda_id()
-        cuda_id = GPUManager.get_free_gpu(
-            target_mem_mb=target_mem_mb,
-            force=False,
-            wait=True,
-            wait_gap=wait_gap,
-            show_waiting=show_waiting,
-            device_range=device_range,
-        )
-        GPUManager._occupy_one_gpu(
-            cuda_id=cuda_id,
-            target_mem_mb=target_mem_mb,
-        )
-"""
+            time.sleep(self.refresh_gap)
+    
+    def run(self, cuda_id):
+        import torch
+        import random
+        x = torch.eye(100, device=f'cuda:{cuda_id}')
+        while self.keep_run:
+            x *= x
+            if random.random() < 0.1:
+                time.sleep(self.refresh_gap)
+
+    def close(self):
+        self.keep_balance = False
+        self.keep_run = False
+        self.balance_process.join()
+        for process in self.run_process_list:
+            process.join()
 
 
 class GPUMemoryMonitor:
