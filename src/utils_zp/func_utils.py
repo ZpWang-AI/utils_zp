@@ -5,6 +5,7 @@ import pandas as pd
 
 from typing import *
 from pathlib import Path as path
+from copy import deepcopy as dcopy
 from collections import defaultdict
 
 
@@ -66,8 +67,7 @@ def dict_to_defaultdict(dic, default_type=dict):
 
 
 def format_element_to_shape(target, json_indent=True):
-    # import torch
-    # import numpy as np
+    target = dcopy(target)
     if hasattr(target, 'shape'):
         res = str(target.shape)
     elif isinstance(target, dict):
