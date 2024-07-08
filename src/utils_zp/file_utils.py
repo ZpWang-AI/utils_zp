@@ -19,7 +19,7 @@ def make_path(dir_path=None, file_path=None):
 
 def dump_json(target, file_path, mode='w', indent=None, auto_indent=True):
     if auto_indent:
-        if mode == 'w':
+        if mode == 'w' and indent is not None:
             indent = 4
         elif mode == 'a':
             indent = None
