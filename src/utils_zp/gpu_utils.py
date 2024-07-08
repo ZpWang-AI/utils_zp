@@ -86,6 +86,10 @@ class GPUBalancer:
             self.cuda_ids = cuda_ids
         else:
             self.cuda_ids = [0]
+        if os.environ.get('CUDA_VISIBLE_DEVICES') is None:
+            self.devices = [f'cuda:{p}'for p in self.cuda_ids]
+        else:
+            self.devices = [f'cuda:{p}'for p in range(len(self.cuda_ids))]
         
         if rest_mem_mb is not None:
             self.target_mem_mb = GPUManager.query_gpu_mem_mb_target(
@@ -99,22 +103,21 @@ class GPUBalancer:
         self.keep_balance = True
         self.keep_run = keep_run
         self.refresh_gap = refresh_gap
+        self.wait_before_start = wait_before_start
         
         self.balance_process = threading.Thread(
             target=self.balance, daemon=True,
         )
         self.run_process_list = [threading.Thread(
-            target=self.run, daemon=True, kwargs={'cuda_id': cuda_id})
-            for cuda_id in self.cuda_ids
+            target=self.run, daemon=True, kwargs={'cuda_id': cuda_id, 'device':device})
+            for cuda_id, device in zip(self.cuda_ids, self.devices)
         ]
-        time.sleep(wait_before_start)
         self.balance_process.start()
         for process in self.run_process_list:
             process.start()
     
-    def _balance_one_gpu(self, cuda_id, tensor_stack):
+    def _balance_one_gpu(self, cuda_id, device, tensor_stack):
         import torch
-        device = f'cuda:{cuda_id}'
         def fill_tensor(e):
             return torch.arange(1, 10**e, device=device)
         {
@@ -140,27 +143,33 @@ class GPUBalancer:
                 torch.cuda.empty_cache()
 
     def balance(self):
+        time.sleep(self.wait_before_start)
+        print('start balancer')
         tensor_stacks = [
             [[], []]
             for _ in self.cuda_ids
         ]
         while self.keep_balance:
-            for pid, cuda_id in enumerate(self.cuda_ids):
+            for cuda_id, device, tensor_stack in zip(self.cuda_ids, self.devices, tensor_stacks):
                 self._balance_one_gpu(
                     cuda_id=cuda_id, 
-                    tensor_stack=tensor_stacks[pid]
+                    device=device,
+                    tensor_stack=tensor_stack,
                 )
             
             time.sleep(self.refresh_gap)
+            # GPUManager.query_gpu_memory(cuda_id=self.cuda_ids[0])
     
-    def run(self, cuda_id):
+    def run(self, cuda_id, device):
         import torch
         import random
-        x = torch.eye(100, device=f'cuda:{cuda_id}')
+        x = torch.eye(100, device=device)
         while self.keep_run:
-            x *= x
-            if random.random() < 0.1:
-                time.sleep(self.refresh_gap)
+            for _ in range(100):
+                x *= x
+            time.sleep(0.001)
+            # if random.random() < 0.1:
+            #     time.sleep(self.refresh_gap)
 
     def close(self):
         self.keep_balance = False
