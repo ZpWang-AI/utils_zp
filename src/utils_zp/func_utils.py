@@ -27,17 +27,19 @@ def add_sys_path(cur_path, to_parent_num=0, insert_to_head=True):
 def build_dict_from_df_or_dicts(
     df_or_dicts:Union[pd.DataFrame, Iterable[dict]],
     key_col_name:str, val_col_name:str,
+    make_key_str=False,
 ):
     if isinstance(df_or_dicts, pd.DataFrame):
-        return dict(zip(
-            df_or_dicts[key_col_name], df_or_dicts[val_col_name],
-        ))
+        key_col = df_or_dicts[key_col_name]
+        val_col = df_or_dicts[val_col_name]
     else:
         key_col, val_col = [], []
         for dic in df_or_dicts:
             key_col.append(dic[key_col_name])
             val_col.append(dic[val_col_name])
-        return dict(zip(key_col, val_col))
+    if make_key_str:
+        key_col = list(map(str, key_col))    
+    return dict(zip(key_col, val_col))
     
 
 def clock_decorator(func):
