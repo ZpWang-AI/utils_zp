@@ -5,9 +5,9 @@ def postprocess_generation_res_to_lid(
     pred:Iterable[str]=None,
     gt:Iterable[str]=None,
     label_list:Iterable[str]=None, 
-    match_strategy:Literal['complete', 'first exists', 'last exists']='complete',
+    match_strategy:Literal['complete', 'first exists', 'last exists']='first exists',
     out_of_range_lid:int=None,
-    lower_results:bool=False,
+    lower_results:bool=True,
 ) -> dict:
     # process pred gt 
     pred_key, gt_key = None, None
@@ -49,11 +49,11 @@ def postprocess_generation_res_to_lid(
             return 1 if x == label else out_of_range_score
     elif match_strategy == 'first exists':
         def score_func(x, label):
-            x, label = x[::-1], label[::-1]
-            return x.index(label) if label in x else out_of_range_score
+            return -x.index(label) if label in x else out_of_range_score
     elif match_strategy == 'last exists':
         def score_func(x, label):
-            return x.index(label) if label in x else out_of_range_score
+            x, label = x[::-1], label[::-1]
+            return -x.index(label) if label in x else out_of_range_score
     else:
         raise 'wrong match_strategy'
     
