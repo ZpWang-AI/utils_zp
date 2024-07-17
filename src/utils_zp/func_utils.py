@@ -24,6 +24,20 @@ def add_sys_path(cur_path, to_parent_num=0, insert_to_head=True):
         sys.path.append(cur_path)
 
 
+def iterations_are_equal(iterations:Iterable[Iterable[str, int, float]]):
+    def encode_iteration(it):
+        return sorted(it)
+    if len(set(len(it)for it in iterations)) != 1:
+        return False
+    iterations = list(iterations)
+    if not len(iterations):
+        return True
+    first = encode_iteration(iterations[0])
+    return all(
+        encode_iteration(iterations[p])==first for p in range(1,len(iterations))
+    )
+
+
 def build_dict_from_df_or_dicts(
     df_or_dicts:Union[pd.DataFrame, Iterable[dict]],
     key_col_name:str, val_col_name:str,
