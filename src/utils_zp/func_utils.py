@@ -24,7 +24,7 @@ def add_sys_path(cur_path, to_parent_num=0, insert_to_head=True):
         sys.path.append(cur_path)
 
 
-def iterations_are_equal(iterations:Iterable[Iterable[str, int, float]]):
+def iterations_are_equal(iterations:Iterable[Iterable[Union[str, int, float]]]):
     def encode_iteration(it):
         return sorted(it)
     if len(set(len(it)for it in iterations)) != 1:
