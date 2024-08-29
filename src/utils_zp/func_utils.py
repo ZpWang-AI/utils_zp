@@ -13,29 +13,19 @@ def print_sep(sep='-', num=20):
     print(sep*num)
 
 
-def add_sys_path(cur_path, to_parent_num=0, insert_to_head=True):
-    cur_path = path(cur_path)
-    for _ in range(to_parent_num):
-        cur_path = cur_path.parent
-    cur_path = str(cur_path)
-    if insert_to_head:
-        sys.path.insert(0, cur_path)
-    else:
-        sys.path.append(cur_path)
-
-
-def iterations_are_equal(iterations:Iterable[Iterable[Union[str, int, float]]]):
-    def encode_iteration(it):
-        return sorted(it)
-    if len(set(len(it)for it in iterations)) != 1:
-        return False
-    iterations = list(iterations)
-    if not len(iterations):
-        return True
-    first = encode_iteration(iterations[0])
-    return all(
-        encode_iteration(iterations[p])==first for p in range(1,len(iterations))
-    )
+# def iterations_are_equal(iterations:Iterable[Iterable[Union[str, int, float]]]):
+#     iterations = list(iterations)
+#     if not len(iterations):
+#         return True
+#     first = sorted(iterations[0])
+#     return (
+#         all(
+#             len(iterations[p])==len(iterations[0]) for p in range(1,len(iterations))
+#         ) and 
+#         all(
+#             sorted(iterations[p])==first for p in range(1,len(iterations))
+#         )
+#     )
 
 
 def build_dict_from_df_or_dicts(
@@ -65,6 +55,15 @@ def clock_decorator(func):
         running_time = running_time if running_time < 3 else int(running_time)
         running_time = datetime.timedelta(seconds=running_time)
         print(f'{func.__name__} ends, runtime: {running_time}')
+        return res
+    return new_func
+
+
+def input_output_decorator(func):
+    def new_func(*args, **kwargs):
+        print(f'{func.__name__} Input:\n  {args} {kwargs}')
+        res = func(*args, **kwargs)
+        print(f'{func.__name__} Output:\n  {args} {kwargs}')
         return res
     return new_func
 
@@ -104,9 +103,10 @@ def format_element_to_shape(target, json_indent=True):
     
 if __name__ == '__main__':
     @clock_decorator
-    def f():
+    @input_output_decorator
+    def f(a=1,b=2):
         time.sleep(3)
-        
+        return a+b
     
-    f()
+    f(123,23)
     
