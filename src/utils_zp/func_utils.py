@@ -2,11 +2,13 @@ import datetime, time
 import json
 import os, sys
 import pandas as pd
+import traceback
 
 from typing import *
 from pathlib import Path as path
-from copy import deepcopy as dcopy
 from collections import defaultdict
+from functools import wraps
+from copy import deepcopy as dcopy
 
 
 def print_sep(sep='-', num=20):
@@ -47,6 +49,7 @@ def build_dict_from_df_or_dicts(
     
 
 def clock_decorator(func):
+    @wraps(func)
     def new_func(*args, **kwargs):
         print(f'{func.__name__} starts')
         start_time = time.time()
@@ -60,12 +63,51 @@ def clock_decorator(func):
 
 
 def input_output_decorator(func):
+    @wraps(func)
     def new_func(*args, **kwargs):
+        print('='*20)
         print(f'{func.__name__} Input:\n  {args} {kwargs}')
+        print('-'*20)
         res = func(*args, **kwargs)
-        print(f'{func.__name__} Output:\n  {args} {kwargs}')
+        print('-'*20)
+        print(f'{func.__name__} Output:\n  {res}')
+        print('='*20)
         return res
     return new_func
+
+
+def catch_exception_decorator_creator(
+    exception_log_file='./exception_log.txt',
+    raise_error=True,
+    default_return=None,
+):
+    def catch_exception_decorator(func):
+        @wraps(func)
+        def new_func(*args, **kwargs):
+            try:
+                res = func(*args, **kwargs)
+                return res
+            except Exception as e:
+                if exception_log_file:
+                    _exception_log_file = path(exception_log_file)
+                    _exception_log_file.parent.mkdir(parents=True, exist_ok=True)
+                    _exception_log_file.touch()
+                    with open(_exception_log_file, 'a', encoding='utf8')as f:
+                        exception_log = '\n'.join([
+                            '!'*40,
+                            f'time     : {str(datetime.datetime.today())}',
+                            f'func name: {func.__name__}',
+                            f'Input    :\n  {str(args)}\n  {str(kwargs)}',
+                            '-'*40+'\n',
+                            traceback.format_exc()+'\n',
+                        ])
+                        f.write(exception_log)
+                if raise_error:
+                    raise e
+                else:
+                    return default_return
+        return new_func
+    return catch_exception_decorator
 
 
 def round_dict_values(dic, k):

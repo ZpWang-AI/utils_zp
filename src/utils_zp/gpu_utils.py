@@ -4,7 +4,7 @@ import pynvml
 import threading
 
 from typing import *
-from .file_utils import dump_json, load_json
+from .file_io import dump_json, load_json
 
 
 def norm_mem_to_mb(mem):
