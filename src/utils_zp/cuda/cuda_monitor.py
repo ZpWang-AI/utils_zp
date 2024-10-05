@@ -64,15 +64,3 @@ class CUDAMemoryMonitor:
             plt.plot(x[max_id], y[max_id], )
         
 
-        
-    @classmethod
-    def load_json_get_xy(cls, filepath) -> Tuple[List[float], List[List[int]]]:
-        res = json_load(filepath)
-        x = []
-        ys = []
-        for t, mems in res:
-            x.append(t)
-            ys.append(mems+[total_mem])
-        ys = list(zip(*ys))
-        return x, ys
-
