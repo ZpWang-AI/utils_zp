@@ -1,4 +1,4 @@
-from ..__utils import *
+from ..base_utils import *
 
 
 class AttrDict(dict):

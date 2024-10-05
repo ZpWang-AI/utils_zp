@@ -1,11 +1,11 @@
-from .__utils_file_io import *
+from ._utils_file_io import *
 
 
 def json_loads(s, *args, **kwargs):
     return json.loads(s, *args, **kwargs)
 
 
-def json_dumps(obj, indent, *args, **kwargs):
+def json_dumps(obj, indent=None, *args, **kwargs):
     return json.dumps(obj=obj, indent=indent, ensure_ascii=False, *args, **kwargs)
 
 
