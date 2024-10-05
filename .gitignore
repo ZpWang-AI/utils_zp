@@ -26,7 +26,6 @@ nohup.out
 !/requirements.txt
 !/src
 !/utils_zp
-!__utils*
 
 # src
 src/scripts
