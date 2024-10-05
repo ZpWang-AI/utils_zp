@@ -1,14 +1,15 @@
-import datetime, time
-import json
-import os, sys
-import pandas as pd
-import traceback
+from .base_utils import *
+# import datetime, time
+# import json
+# import os, sys
+# import pandas as pd
+# import traceback
 
-from typing import *
-from pathlib import Path as path
-from collections import defaultdict
-from functools import wraps
-from copy import deepcopy as dcopy
+# from typing import *
+# from pathlib import Path as path
+# from collections import defaultdict
+# from functools import wraps
+# from copy import deepcopy as dcopy
 
 
 def print_sep(sep='-', num=20):
@@ -118,7 +119,7 @@ def round_dict_values(dic, k):
     
 
 def dict_to_defaultdict(dic, default_type=dict):
-    new_dic = defaultdict(default_type)
+    new_dic = collections.defaultdict(default_type)
     new_dic.update(dic)
     return new_dic
 

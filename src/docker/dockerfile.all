@@ -1,0 +1,37 @@
+FROM python:3.11.9
+
+# create env
+RUN --mount=type=bind,source=requirements.txt,target=/tmp/requirements.txt \
+    pip install --requirement /tmp/requirements.txt
+
+
+COPY . app/
+WORKDIR /app
+
+CMD python main_v2_1_2.py --address 0.0.0.0 --port 8602
+EXPOSE 8602
+
+
+# build image
+# sudo docker build -f docker/dockerfile.all -t tsqb_frontend_image:latest .
+
+# run image to get container
+# sudo docker run -d --name tsqb_frontend -p 8602:8602 tsqb_frontend_image:latest 
+
+# watch log
+# sudo docker logs -f tsqb_frontend
+
+# ===================================
+# save image
+# sudo docker save -o /path/to/save/tsqb_frontend_image.tar tsqb_frontend_image:latest
+
+# laod image
+# sudo docker load -i /local/path/tsqb_frontend_image.tar
+
+# run image to get container
+# sudo docker run -d --name tsqb_frontend -p xxx:8602 tsqb_frontend_image:latest 
+
+# sudo docker run -v /path/on/database:/app/database -v  -d --name tsqb_frontend -p 8005:8005 tsqb_frontend_image:latest  # database
+
+
+## 需要添加包 openpyxl

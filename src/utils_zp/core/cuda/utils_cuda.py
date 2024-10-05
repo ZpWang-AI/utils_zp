@@ -1,5 +1,3 @@
-import pynvml
-
 from ..base_utils import *
 
 
@@ -29,6 +27,7 @@ class OneCUDA:
 class CUDAUtils:
     @staticmethod
     def query_cuda_memory(cuda_id:int, target:Literal['free', 'used', 'total']=None):
+        import pynvml
         pynvml.nvmlInit()
         handle = pynvml.nvmlDeviceGetHandleByIndex(cuda_id)
         info = pynvml.nvmlDeviceGetMemoryInfo(handle)
@@ -38,6 +37,7 @@ class CUDAUtils:
 
     @staticmethod
     def get_all_cuda_id():
+        import pynvml
         pynvml.nvmlInit()
         cuda_cnt = list(range(pynvml.nvmlDeviceGetCount()))
         pynvml.nvmlShutdown()

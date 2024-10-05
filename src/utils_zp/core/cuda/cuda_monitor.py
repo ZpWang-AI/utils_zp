@@ -1,5 +1,3 @@
-import threading
-
 from .utils_cuda import *
 from ..file_io import json_dump, json_load
 

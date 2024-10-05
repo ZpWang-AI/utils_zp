@@ -1,8 +1,4 @@
-import numpy as np
-import pandas as pd
-
-from typing import *
-from matplotlib import pyplot as plt
+from .base_utils import *
 
 
 def plot_curve(
@@ -11,6 +7,7 @@ def plot_curve(
     x_range:Tuple[float, float]=None, y_range:Tuple[float, float]=None,
     close:bool=False,
 ):
+    from matplotlib import pyplot as plt
     plt.plot(*xys,)
     plt.title(title)
     if x_name is not None:
@@ -32,6 +29,7 @@ def mark_extremum(
     mark_max=False, mark_min=False, 
     format_y_func=None,
 ):
+    from matplotlib import pyplot as plt
     if format_y_func is None:
         format_y_func = lambda y:y
     if mark_max:
@@ -43,6 +41,7 @@ def mark_extremum(
         
 
 def plot_hist(data, bins, fig_path):
+    from matplotlib import pyplot as plt
     pd.Series(data).hist(bins=bins)
     plt.xlabel('Value')
     plt.ylabel('Frequency')
@@ -52,6 +51,7 @@ def plot_hist(data, bins, fig_path):
     
 
 def visualize_1d_matrix(matrix, fig_path):
+    from matplotlib import pyplot as plt
     x, y = list(range(len(matrix))), sorted(matrix)
     plt.scatter(x, y,)
     mark_extremum(x,y,True,True)

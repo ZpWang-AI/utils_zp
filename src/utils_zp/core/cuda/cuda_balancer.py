@@ -1,5 +1,3 @@
-import threading
-
 from .utils_cuda import *
 
 

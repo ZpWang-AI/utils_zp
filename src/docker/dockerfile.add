@@ -1,0 +1,8 @@
+FROM tsqb:env
+# FROM python:3.10.14
+
+RUN pip install openpyxl
+
+# sudo docker build -f docker/dockerfile.add -t tsqb:env .
+
+## 需要添加包 openpyxl
