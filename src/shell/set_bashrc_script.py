@@ -5,7 +5,8 @@ from pathlib import Path as path
 with open(path(__file__).parent / 'set_bashrc.sh', 'r', encoding='utf8')as f:
     custom_setting_str = f.read().strip()+'\n'
 
-os.system('cd ~')
+# os.system('cd ~')
+os.chdir(os.path.expanduser("~"))
 with open('.bashrc', 'r', encoding='utf8')as f:
     bashrc = f.read()
 
@@ -23,4 +24,4 @@ with open('.bashrc', 'w', encoding='utf8')as f:
     
 print(new_bashrc)
 print('\n> Please run below cmd.')
-print('source .bashrc')
+print('source ~/.bashrc')

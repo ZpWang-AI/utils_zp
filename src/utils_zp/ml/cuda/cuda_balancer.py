@@ -16,7 +16,6 @@ class CUDABalancer:
             self.cuda_ids = cuda_ids
         else:
             self.cuda_ids = [0]
-        self.devices = [f'cuda:{p}'for p in self.cuda_ids]
         
         if rest_mem_mb is not None:
             self.target_mem_mb = CUDAUtils.query_cuda_memory(
@@ -46,6 +45,7 @@ class CUDABalancer:
     
     def _balance_one_cuda(self, cuda_id, tensor_stack):
         import torch
+        
         def fill_tensor(e):
             return torch.arange(1, 10**e, device=f'cuda:{cuda_id}')
         {
@@ -73,15 +73,15 @@ class CUDABalancer:
     def balance(self):
         time.sleep(self.wait_before_start)
         print('start balancer')
+        
         tensor_stacks = [
             [[], []]
             for _ in self.cuda_ids
         ]
         while self.keep_balance:
-            for cuda_id, device, tensor_stack in zip(self.cuda_ids, self.devices, tensor_stacks):
+            for cuda_id, tensor_stack in zip(self.cuda_ids, tensor_stacks):
                 self._balance_one_cuda(
-                    cuda_id=cuda_id, 
-                    device=device,
+                    cuda_id=cuda_id,
                     tensor_stack=tensor_stack,
                 )
             
@@ -89,14 +89,12 @@ class CUDABalancer:
     
     def run(self, cuda_id):
         import torch
-        # import random
+        
         x = torch.eye(100, device=f'cuda:{cuda_id}')
         while self.keep_running:
             for _ in range(100):
                 x *= x
             time.sleep(0.001)
-            # if random.random() < 0.1:
-            #     time.sleep(self.refresh_gap)
 
     def close(self):
         self.keep_balance = False

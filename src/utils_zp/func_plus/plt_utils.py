@@ -1,4 +1,4 @@
-from .np_df_utils import *
+from ..core import *
 
 
 def plot_curve(

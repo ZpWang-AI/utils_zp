@@ -1,5 +1,4 @@
 from .utils_cuda import *
-from ..file_io import json_dump, json_load
 
 
 class CUDAMemoryMonitor:
@@ -7,6 +6,9 @@ class CUDAMemoryMonitor:
         self.cuda_ids = cuda_ids
         self.save_filepath = path(save_filepath)
         assert self.save_filepath.suffix == '.jsonl'
+        if self.save_filepath.exists():
+            os.remove(self.save_filepath)
+        
         self.monitor_gap = monitor_gap
         
         self.start_time = time.time()
@@ -41,13 +43,14 @@ class CUDAMemoryMonitor:
     @classmethod
     def draw_from_json(cls, save_filepath, output_filepath):
         import numpy as np
-        import matplotlib.pyplot as plt
+        from matplotlib import pyplot as plt
         
         saved_res = json_load(save_filepath)
         if not saved_res:
             raise Exception('wrong result')
+        
         total_mem = saved_res.pop(0)
-        x, ys = zip(saved_res)
+        x, ys = zip(*saved_res)
         
         max_x = max(x)
         if max_x > 60*5:
@@ -55,10 +58,13 @@ class CUDAMemoryMonitor:
         elif max_x > 3600*5:
             x = [d/3600 for d in x]
         
-        ys = list(zip(*ys))
-        for y in ys:
+        plt.plot(x, [total_mem]*(len(x)))
+        plt.text(x[0], total_mem, str(total_mem))
+        for y in zip(*ys):
             plt.plot(x, y)
             max_id = np.argmax(y)
-            plt.plot(x[max_id], y[max_id], )
+            plt.text(x[max_id], y[max_id], str(y[max_id]))
         
+        plt.savefig(output_filepath)
+        plt.close()
 

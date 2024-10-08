@@ -1,4 +1,4 @@
-from ..ml_utils import *
+from ...core import *
 
 
 def norm_mem_to_mb(mem):
@@ -55,7 +55,7 @@ class CUDAUtils:
         if not device_range:
             device_range = CUDAUtils.get_all_cuda_id()
 
-        target_mem_mb *= 1024**2
+        # target_mem_mb *= 1024**2
         while 1:
             cuda_id_lst = []         
             for cuda_id in device_range:

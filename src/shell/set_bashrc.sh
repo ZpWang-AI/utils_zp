@@ -1,4 +1,5 @@
 export PS1="\e[1;32m[\\u@\\h \\W]\\$ \e[m "
+export HF_ENDPOINT="https://hf-mirror.com"
 
 alias psa="ps -aux"
 alias ls="ls --color=auto"
