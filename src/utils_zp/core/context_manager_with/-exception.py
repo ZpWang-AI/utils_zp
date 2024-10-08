@@ -10,7 +10,8 @@ _output = {}
 #     1/0
 with ExceptionManager(
     exception_log_func=builtin_print,
-    ignore_error=False
+    ignore_error=True,
+    exception_log_file=path(__file__).parent/'~exception.log'
 ):
     1/0
 

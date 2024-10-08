@@ -1,5 +1,5 @@
 from .import_ import *
-from .format import format_seconds_to_str
+from .format_ import format_seconds_to_str
 
 
 def cur_time(format='%Y-%m-%d %H:%M:%S', return_formated_str=True) -> Union[str, float]:

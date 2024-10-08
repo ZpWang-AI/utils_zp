@@ -26,16 +26,12 @@ class ExceptionManager:
         pass
     
     def __exit__(self, exc_type, exc_value, traceback_):
-        _log_info = '\n'.join([
-            '=' * self.info_line_len,
-            f'time: {cur_time()}',
-            f'name: {self.manager_name}',
-            f'Info:\n  {str(self.exception_info)}',
-            f'-' * self.info_line_len, 
-            '',
-            traceback.format_exc(),
-            '\n',
-        ])
+        _info = {
+            'Time': cur_time(),
+            'Name': self.manager_name,
+            'Info': self.exception_info,
+        }
+        _log_info = CustomExceptionHandler(info=_info).str
         if self.exception_log_file:
             with open(self.exception_log_file, 'a', encoding='utf8')as f:
                 f.write(_log_info)

@@ -81,16 +81,15 @@ class BaseDecoratorCreator:
             try:
                 ret = func(*args, **kwargs)
             except Exception as e:
-                _log_info = '\n'.join([
-                    '!' * 80,
-                    f'time     : {cur_time()}',
-                    f'func name: {func_name}',
-                    f'Input    :\n  {str(args)}\n  {str(kwargs)}',
-                    f'Info     :\n  {self.exception_info}' if self.exception_info else '',
-                    f'-' * 80, '',
-                    traceback.format_exc(),
-                    '\n',
-                ])
+                _info = {
+                    'Time': cur_time(),
+                    'Func name': func_name,
+                    'Input': f'{str(args)}\n  {str(kwargs)}',
+                }
+                if self.exception_info:
+                    _info['Info'] = self.exception_info
+                    
+                _log_info = CustomExceptionHandler(info=_info).str
                 if self.exception_log_file:
                     with open(self.exception_log_file, 'a', encoding='utf8')as f:
                         f.write(_log_info)

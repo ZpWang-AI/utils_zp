@@ -21,6 +21,7 @@ nohup.out
 !/README.md
 !/requirements.txt
 !/setup.py
+!/TODO.md
 !/VERSION
 
 !/src
