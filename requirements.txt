@@ -4,3 +4,4 @@ pandas
 paramiko
 pynvml
 setproctitle
+pyyaml

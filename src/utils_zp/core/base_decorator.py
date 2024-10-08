@@ -1,17 +1,6 @@
 from .base_utils import *
 
 
-def format_seconds_to_str(seconds:Union[int, float, str]):
-    if isinstance(seconds, str):
-        seconds = float(seconds)
-    if seconds < 1:
-        return f'{seconds:.3f}s'
-    elif seconds < 30:
-        return f'{seconds:.2f}s'
-    else:
-        return datetime.timedelta(seconds=int(seconds))
-
-
 class BaseDecoratorCreator:
     def __init__(
         self,

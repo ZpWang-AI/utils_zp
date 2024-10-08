@@ -1,5 +1,5 @@
 def run_multitasks(tasks):
-    # import multiprocessing
+    # import multiprocessing as mp
     import pathos.multiprocessing as mp
     from functools import partial
     

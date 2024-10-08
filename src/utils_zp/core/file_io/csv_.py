@@ -2,6 +2,7 @@ from ._utils_file_io import *
 
 
 def csv_load(filepath, encoding='utf-8'):
+    import pandas as pd
     filepath = load_dump_prepocess(
         filepath=filepath,
         is_load=True,
@@ -12,12 +13,11 @@ def csv_load(filepath, encoding='utf-8'):
     return df
 
 
-def csv_dump(obj:pd.DataFrame, filepath, encoding='utf-8'):
+def csv_dump(obj, filepath, encoding='utf-8'):
     filepath = load_dump_prepocess(
         filepath=filepath,
         is_load=False,
         valid_suffixes=['.csv'],
     )
-    
     obj.to_csv(filepath, index=False)
 

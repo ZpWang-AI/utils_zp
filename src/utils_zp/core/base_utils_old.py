@@ -15,6 +15,8 @@ from traceback import format_exc, print_exc
 from builtins import print as builtin_print
 from functools import wraps
 
+from .format import *
+
 
 def make_path(dir_path=None, file_path=None):
     if file_path is not None:
@@ -40,8 +42,11 @@ def add_sys_path(cur_path, to_parent_num=0, insert_to_head=True):
 def cur_time(format='%Y-%m-%d %H:%M:%S', return_formated_str=True) -> Union[str, float]:
     """
     %Y-%m-%d %H:%M:%S
+    
     %Y-%m-%d-%H-%M-%S
+    
     %Y_%m_%d_%H_%M_%S
+    
     %Y.%m.%d-%H:%M:%S
     """
     if return_formated_str:
