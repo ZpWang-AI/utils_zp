@@ -1,18 +1,19 @@
-# *.sh
-*.cmd
-*.zip
-*.ipynb
-*.log
-*~*
-*tmp*
-# *test*
-*.old*
-
 __pycache__
+backup
 logs
 .vscode
 .git
 nohup.out
+
+# *.sh
+# *.cmd
+# *.ipynb
+*.zip
+*.log
+*~*
+# *tmp*
+# *test*
+*.old*
 
 # ==============================
 
@@ -24,9 +25,8 @@ nohup.out
 !/TODO.md
 !/VERSION
 
-!/src
-
 # src
+!/src
 src/scripts
 src/*.egg-info
 
