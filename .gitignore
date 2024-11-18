@@ -29,7 +29,9 @@ local/
 
 /*
 !/.gitignore
+!/pyproject.toml
 !/README.md
+!/requirements_all.txt
 !/requirements.txt
 !/setup.py
 !/TODO.md

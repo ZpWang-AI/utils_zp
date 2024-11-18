@@ -2,6 +2,11 @@
 
 Utilities used by zpwang.
 
+~~~sh
+cd utils_zp
+pip install -e .
+~~~
+
 ## Rules of file naming
 
 **~xx** : tmp file that would be ignored
