@@ -1,4 +1,6 @@
-export PS1="\e[1;32m[\\u@\\h \\W]\\$ \e[m "
+## copy this sh file, use ". bashrc_zp.sh" to import it
+
+export PS1="\e[1;32m[\\u@\\h \\w]\\$ \e[m"  # make the prompt string green
 export HF_ENDPOINT="https://hf-mirror.com"
 
 # alias psa="ps -aux"
@@ -9,4 +11,4 @@ alias condada="conda deactivate"
 alias listusage="du -h -d 1 | sort -hr"
 alias kkgpu="watch --color -n1 gpustat -cpu --color"
 
-
+## source ~/.bashrc
