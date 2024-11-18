@@ -28,11 +28,14 @@ def main():
         version=get_version(),
         author='zpwang',
         author_email='zhipangwang@gmail.com',
-        description='Utilities',
+        description='Utilities of zp',
         long_description=long_description,
         long_description_content_type='text/markdown',
+        
         package_dir={'': 'src'},
         packages=setuptools.find_packages('src'),
+        # packages=['src/utils_zp/'],
+        # package_data={'': ['.txt']},
         # install_requires=required,
     )
 

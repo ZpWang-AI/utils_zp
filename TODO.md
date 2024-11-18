@@ -1,3 +1,5 @@
+* requirements
+
 * src/core/shell_
 
 run shell by py with unlimited retry times
@@ -17,4 +19,4 @@ plt
 count_params.py: trainable, total
 postprocess_generation_res.py: IDRR dir
 
-* auto update by git push/pull
+<!-- * auto update by git push/pull -->

@@ -1,0 +1,31 @@
+version: '3'
+services:
+    t2sc:
+        image: t2sc
+        container_name: t2sc
+        networks:
+            - suda
+        ports:
+            - 8005:8005
+        command: bash -c "sed -i '63s/.*/    approved_step2_funcs = list(range(1, 23))/' /app/core/apis/apis_v03.py && python server_scenario.py --address 0.0.0.0 --port 8005"
+    tsqb:
+        image: tsqb
+        container_name: tsqb
+        networks:
+            - suda
+        ports:
+            - 8602:8602
+        command: python src/app.py --address 0.0.0.0 --port 8602 --scenario_url http://t2sc:8005/v2 --final_scenario_url http://192.168.1.203:8060/simulation/savescenefile --jump_3d_url http://192.168.1.203:8060/llm/scene/goSceneEditPage --send_satellite_type_url http://192.168.1.203:8060/llm/db/getInfoByDetectorType --get_all_target_url http://192.168.1.203:8060/llm/scene/getAllTargetInfo --add_satellite_url http://192.168.1.203:8060/llm/db/addSatelliteInfo
+networks:
+    suda:
+        driver: bridge
+
+# gunzip -c tsqb.gz | docker load | awk -F: '{print $NF}' | xargs -I {} docker tag {} tsqb
+# gunzip -c t2sc.gz | docker load | awk -F: '{print $NF}'  | xargs -I {} docker tag {} t2sc
+# docker compose up
+
+#    parser.add_argument("--final_scenario_url", type=str)
+#    parser.add_argument("--jump_3d_url", type=str)
+#    parser.add_argument("--send_satellite_type_url", type=str)
+#    parser.add_argument("--get_all_target_url", type=str)
+#    parser.add_argument("--add_satellite_url", type=str)

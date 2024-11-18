@@ -1,19 +1,29 @@
 __pycache__
-backup
-logs
 .vscode
 .git
+.DS_Store
 nohup.out
+
+*backup*/
+*trash*/
+*log*/
+*tmp*/
+old/
+local/
+# *archive
 
 # *.sh
 # *.cmd
 # *.ipynb
 *.zip
+*.7z
 *.log
-*~*
-# *tmp*
 # *test*
+~*
+*~
+*~.*
 *.old*
+*.egg-info
 
 # ==============================
 
@@ -27,7 +37,4 @@ nohup.out
 
 # src
 !/src
-src/scripts
-src/*.egg-info
 
-# data
