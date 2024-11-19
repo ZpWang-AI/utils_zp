@@ -8,9 +8,9 @@ from utils_zp import *
     print_output=True,
     
     exception_log_file=path(__file__).parent/'~tmp.log',
-    # exception_info='123error info',
+    exception_info='error info',
     ignore_error=True,
-    default_return='default return'
+    default_return=['dr1', 'dr2']
 )
 def abc(a,b,c):
     print(a+b+c)

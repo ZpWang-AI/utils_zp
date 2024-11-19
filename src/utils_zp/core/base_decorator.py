@@ -1,6 +1,16 @@
 from .base_utils import *
 
 
+class _Return:
+    def __init__(self):
+        self.val = None
+    
+    def __str__(self):
+        if isinstance(self.val, (list, tuple, dict)):
+            return json_dumps_force(self.val, indent=4)
+        return str(self.val)
+
+
 class BaseDecoratorCreator:
     def __init__(
         self,
@@ -35,36 +45,23 @@ class BaseDecoratorCreator:
     def print_info_decorator(self, func):
         if not self.print_info:
             return func
+
+        from .context_manager_with import PrintInfoManager
         
         @functools.wraps(func)
         def _func(*args, **kwargs):
             func_name = func.__name__
-            _info = [f'=== {func_name} starts ... '.ljust(30, '=')]
-            if self.print_running_time:
-                start_time_str = cur_time()
-                start_time = cur_time(return_formated_str=False)
-                _info.append(f'> Start time: {start_time_str}')
-            if self.print_input:
-                _info.append(f'> Input:\n  {str(args)}\n  {str(kwargs)}')
-            _info.append('-'*30)
-            self.print_func('\n'.join(_info))
-            
-            ret = func(*args, **kwargs)
-                        
-            _info = [f'=== {func_name} ends ... '.ljust(30, '=')]
-            if self.print_running_time:
-                running_time = cur_time(return_formated_str=False)-start_time # type: ignore
-                running_time = format_seconds_to_str(running_time)
-                _info.append(
-                    f'> Running time: {start_time_str} - {cur_time()}\n'
-                    f'> Time cost: {running_time}'
-                )
-            if self.print_output:
-                _info.append(f'> Output:\n  {str(ret)}')
-            _info.append('-'*30)
-            self.print_func('\n'.join(_info[::-1]))
-                
-            return ret
+            ret = _Return()
+            with PrintInfoManager(
+                manager_name=func_name,
+                print_running_time=self.print_running_time,
+                input_=f'{json_dumps_force(args, indent=4)}\n{json_dumps_force(kwargs, indent=4)}',
+                output_=ret,
+                print_func=self.print_func,
+                info_line_len=40,
+            ):
+                ret.val = func(*args, **kwargs)
+            return ret.val
         return _func
 
     def exception_decorator(self, func):
@@ -74,34 +71,22 @@ class BaseDecoratorCreator:
             self.ignore_error,
         ]):
             return func
+
+        from .context_manager_with import ExceptionManager
         
         @functools.wraps(func)
         def _func(*args, **kwargs):
             func_name = func.__name__
-            try:
-                ret = func(*args, **kwargs)
-            except Exception as e:
-                _info = {
-                    'Time': cur_time(),
-                    'Func name': func_name,
-                    'Input': f'{str(args)}\n  {str(kwargs)}',
-                }
-                if self.exception_info:
-                    _info['Info'] = self.exception_info
-                    
-                _log_info = CustomExceptionHandler(info=_info).str
-                if self.exception_log_file:
-                    with open(self.exception_log_file, 'a', encoding='utf8')as f:
-                        f.write(_log_info)
-                if self.exception_log_func:
-                    self.exception_log_func(_log_info)
-                
-                if self.ignore_error:
-                    ret = dcopy(self.default_return)
-                else:
-                    raise e
-                
-            return ret
+            with ExceptionManager(
+                manager_name=func_name,
+                exception_log_file=self.exception_log_file,
+                exception_log_func=self.exception_log_func,
+                exception_info={'args': args, 'kwargs': kwargs},
+                ignore_error=self.ignore_error,
+                info_line_len=40,
+            ):
+                return func(*args, **kwargs)
+            return dcopy(self.default_return)
         return _func
     
     def __call__(self, func):

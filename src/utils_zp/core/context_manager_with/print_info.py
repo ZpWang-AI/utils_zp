@@ -21,29 +21,35 @@ class PrintInfoManager:
         self.info_line_len = info_line_len
         
     def __enter__(self):
-        _info = [f'=== {self.manager_name} starts ... '.ljust(self.info_line_len, '=')]
+        _info = [gap_line(
+            f'{self.manager_name} starts ...', 
+            total_len=self.info_line_len, 
+            ljust=3,
+        )]
         if self.print_running_time:
-            self.start_time = cur_time(return_formated_str=False)
-            _info.append(f'> Start time: {cur_time()}')
+            self.start_time = Datetime_()
+            _info.append(f'> Start time: {Datetime_().format_str(1)}')
         if self.input_ is not None:
-            _info.append(f'> Input:\n  {str(self.input_)}')
+            _info.append(f'> Input:\n{str(self.input_)}')
         _info.append(gap_line(fillchar='-', total_len=self.info_line_len))
         self.print_func('\n'.join(_info))
         
     def __exit__(self, *exc_info):
-        _info = [f'=== {self.manager_name} ends ... '.ljust(self.info_line_len, '=')]
+        _info = [gap_line(fillchar='-', total_len=self.info_line_len)]
         if self.print_running_time:
-            running_time = cur_time(return_formated_str=False)-self.start_time
-            running_time = format_seconds_to_str(running_time)
-            start_time_str = format_datetime(datetime.datetime.fromtimestamp(self.start_time))
+            end_time = Datetime_()
             _info.append(
-                f'> Running time: {start_time_str} - {cur_time()}\n'
-                f'> Time cost: {running_time}'
+                f'> Running time: {self.start_time.format_str(1)} - {end_time.format_str(1)}\n'
+                f'> Time cost: {end_time - self.start_time}'
             )
-        if self.output_:
-            _info.append(f'> Output:\n  {str(self.output_)}')
-        _info.append(gap_line(fillchar='-', total_len=self.info_line_len))
-        self.print_func('\n'.join(_info[::-1])+'\n')
+        if self.output_ is not None:
+            _info.append(f'> Output:\n{str(self.output_)}')
+        _info.append(gap_line(
+            f'{self.manager_name} ends ...',
+            total_len=self.info_line_len,
+            ljust=3,
+        ))
+        self.print_func('\n'.join(_info)+'\n')
         return False
 
 

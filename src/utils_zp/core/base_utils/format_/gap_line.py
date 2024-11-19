@@ -1,14 +1,19 @@
 # from functools import wraps
 
 
-def gap_line(mid_str=None, fillchar='=', total_len=40):
-    if not mid_str:
+def gap_line(info_str=None, fillchar='=', total_len=40, ljust:int=None):
+    if not info_str:
         return fillchar*total_len
-    mid_str = str(mid_str)
-    left_len = max(1, (total_len-len(mid_str)-2)//2)
-    res = fillchar*left_len + f' {mid_str} '
+    info_str = str(info_str)
+    if ljust is None:
+        left_len = max(1, (total_len-len(info_str)-2)//2)
+    else:
+        left_len = ljust
+    res = fillchar*left_len + f' {info_str} '
     right_len = max(1, total_len-len(res))
-    return res + fillchar*right_len
+    res += fillchar*right_len
+    return res
+        
 
 
 # @wraps(gap_line)

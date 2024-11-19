@@ -27,7 +27,7 @@ class ExceptionManager:
     
     def __exit__(self, exc_type, exc_value, traceback_):
         _info = {
-            'Time': cur_time(),
+            'Time': Datetime_().format_str(1),
             'Name': self.manager_name,
             'Info': self.exception_info,
         }
