@@ -19,3 +19,4 @@ def gap_line(mid_str=None, fillchar='=', total_len=40):
 if __name__ == '__main__':
     print(gap_line('123'))
     print(gap_line())
+    

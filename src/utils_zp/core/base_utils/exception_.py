@@ -6,14 +6,14 @@ class CustomExceptionHandler:
     gap_line_a = '!'*80
     gap_line_b = '-'*80
 
-    def __init__(self, info:dict, tb=None, **kwargs) -> None:
+    def __init__(self, info:dict, exc_str=None, **kwargs) -> None:
         assert isinstance(info, dict)
-        self.info:dict = dict(map(lambda x: (str(x[0]), str(x[1])), info.items()))
+        self.info = info
         self.info.update(kwargs)
-        if tb is None:
-            self.tb_detail:str = traceback.format_exc()
+        if exc_str is None:
+            self.exc_str:str = traceback.format_exc()
         else:
-            self.tb_detail:str = str(tb)
+            self.exc_str:str = str(exc_str)
     
     def __repr__(self) -> str:
         _log_info = [
@@ -21,7 +21,7 @@ class CustomExceptionHandler:
             json_dumps_force(self.info, indent=4),
             self.gap_line_b,
             '',
-            self.tb_detail,
+            self.exc_str,
             '',
         ]
         return '\n'.join(_log_info)
@@ -40,10 +40,10 @@ class CustomExceptionHandler:
             
         records = []
         for record_str in content.split(cls.gap_line_a):
-            info_str, tb = record_str.split(cls.gap_line_b, 1)
+            info_str, exc_str = record_str.split(cls.gap_line_b, 1)
             records.append(cls(
                 info=json.loads(info_str), 
-                tb=tb,
+                exc_str=exc_str,
             ))
         return records
         
