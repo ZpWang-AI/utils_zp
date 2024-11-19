@@ -1,8 +1,9 @@
-tqdm
 matplotlib
 numpy
 pandas
-paramiko
+# torch
+tqdm
+# transformers
 pynvml
 setproctitle
 pyyaml
