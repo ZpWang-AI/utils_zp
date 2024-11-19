@@ -7,7 +7,7 @@ class ExpArgs(AttrDict):
         # ============= base_setting =============
         self.part1 = 'base_setting'
         self.desc = 'test'
-        self.create_time = cur_time()
+        self.create_time = Datetime_()
         
         self._version_info_list = []
         
@@ -25,7 +25,7 @@ class ExpArgs(AttrDict):
     
     def set_create_time(self, create_time=None):
         if not create_time:
-            self.create_time = cur_time()
+            self.create_time = Datetime_()
         else:
             self.create_time = create_time
     

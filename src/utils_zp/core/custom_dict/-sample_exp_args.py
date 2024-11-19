@@ -127,4 +127,5 @@ class CustomArgs(ExpArgs):
 
 if __name__ == '__main__':
     # import pdb; pdb.set_trace()
-    print(CustomArgs(a=1))
+    _sample = CustomArgs(a=1)
+    auto_dump(_sample, './~sample_exp_args.json')

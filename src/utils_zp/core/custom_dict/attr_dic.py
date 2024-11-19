@@ -19,19 +19,19 @@ class AttrDict(dict):
         self.__setattr__(key, value)
     
     @property
-    def json(self):
+    def json_dic(self):
         json_dic = {}
         for k,v in self.items():
             if k.startswith('_'):
                 continue
             elif isinstance(v, AttrDict):
-                json_dic[k] = v.json
+                json_dic[k] = v.json_dic
             else:
-                json_dic[k] = json_dumps_force(v)
+                json_dic[k] = json.loads(json_dumps_force(v))
         return json_dic
 
     def __repr__(self):
-        return json.dumps(self.json, ensure_ascii=False, indent=4)
+        return json.dumps(self.json_dic, ensure_ascii=False, indent=4)
 
     # @property
     # def yaml(self):
