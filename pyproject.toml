@@ -16,8 +16,8 @@ classifiers = [
     # "Operating System :: OS Independent",
 ]
 
-# [project.scripts]
-# npt-cli-hello = "npt.core:hello"
+[project.scripts]
+bgpy = "utils_zp.script.bg_python:run_python_background"
 
 # [build-system]
 # requires = ["hatchling"]
