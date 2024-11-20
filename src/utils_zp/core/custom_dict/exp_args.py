@@ -21,7 +21,7 @@ class ExpArgs(AttrDict):
             if part_name in self:
                 part_val:str = self[part_name]
                 if part_val[0] != '=':
-                    self[part_name] = gap_line(part_val)
+                    self[part_name] = gap_line(part_val, ljust=11)
     
     def set_create_time(self, create_time=None):
         if not create_time:
@@ -39,7 +39,7 @@ class ExpArgs(AttrDict):
             match = re.search(r'self\.part(\d+)', line)
             if match:
                 part_val = self[f'part{match.group(1)}']
-                comment = f'{prefix_space}# {gap_line(part_val)}\n'
+                comment = f'{prefix_space}# {part_val}\n'
                 if target_lines and re.match(r'^\s*#', target_lines[-1]):
                     target_lines[-1] = comment
                 else:
