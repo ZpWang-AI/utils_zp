@@ -17,7 +17,11 @@ classifiers = [
 ]
 
 [project.scripts]
-bgpy = "utils_zp.script.bg_python:run_python_background"
+zp = "script:zp_help"
+bgpy = "script:run_python_background"
+update_bashrc = "script:update_bashrc"
+zp_test = "script:zp_cmd_test"
+# bgpy = "utils_zp.script.bg_python:run_python_background"
 
 # [build-system]
 # requires = ["hatchling"]

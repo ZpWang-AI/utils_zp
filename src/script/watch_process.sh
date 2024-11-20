@@ -1,4 +1,4 @@
-process="$( ps -def | grep zpwang | grep -v grep | grep -v watch_process )"
+process="$( ps -def | grep zp | grep -v grep | grep -v watch_process )"
 # echo "$process"
 
 echo -e "\n= python ============="
