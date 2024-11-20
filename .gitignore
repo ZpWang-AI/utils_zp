@@ -29,6 +29,7 @@ local/
 
 /*
 !/.gitignore
+!/dependence.drawio.png
 !/pyproject.toml
 !/README.md
 !/requirements_all.txt
