@@ -6,14 +6,17 @@
 
 ### conda pack
 
-conda install conda-pack
-conda pack -n _env_name_ -o conda_env.tar.gz
+pip install conda-pack
+conda pack -n _env_name_ -o conda_env.tar.gz --ignore-editable-packages
 
 scp _serverA_:conda_env.tar.gz _serverB_:~/tmp
 
 which python # get conda_path
 mkdir -p _conda_path_/_new_env_name_
 tar -xzf ~/tmp/conda_env.tar.gz -C _conda_path_/_new_env_name_
+# source /data/zpwang/anaconda3/envs/zpwang_main/bin/activate
+# conda activate zpwang_main
+# conda-unpack
 
 
 ### pip list
