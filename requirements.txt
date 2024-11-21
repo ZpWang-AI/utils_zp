@@ -1,9 +1,10 @@
+gpustat
 matplotlib
 numpy
 pandas
 # torch
 tqdm
-# transformers
+transformers
 pynvml
 setproctitle
 pyyaml
