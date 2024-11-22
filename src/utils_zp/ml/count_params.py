@@ -1,7 +1,13 @@
+from ..core import format_int
+
+
 def count_parameters(model):
-    param_cnt = sum(p.numel() for p in model.parameters())
-    param_cnt = str(param_cnt)
-    cnt_n = len(param_cnt)
-    param_list = [param_cnt[max(0, p-3):p]for p in range(cnt_n, 0, -3)]
-    param_str = ','.join(param_list[::-1])
-    return param_str
+    return {
+        'total': format_int(sum(
+            p.numel() for p in model.parameters()
+        )),
+        'trainable': format_int(sum(
+            p.numel() for p in model.parameters() if p.requires_grad
+        )),
+    }
+

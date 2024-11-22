@@ -178,6 +178,7 @@ def auto_dump(obj, filepath, force=True):
         if not force:
             raise FileUtilsException(f'wrong suffix: {filepath}')
         
+        # obj = str(obj)
         with open(filepath, 'w', encoding='utf8')as f:
             f.write(str(obj))
-
+        return obj
