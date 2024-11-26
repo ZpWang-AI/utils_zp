@@ -1,6 +1,8 @@
 ## copy this sh file, use ". bashrc_zp.sh" to import it
 
-export PS1="\e[1;32m[\\u@\\h \\w]\\$ \e[m"  # make the prompt string green
+export PS1='\[\e[1;32m\][\u@\h \w]$ \[\e[0m\]'  # make the prompt string green
+# add \[\e[XXX\] to change the font color
+
 export HF_ENDPOINT="https://hf-mirror.com"
 
 # alias psa="ps -aux"
