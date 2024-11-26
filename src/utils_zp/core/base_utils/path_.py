@@ -21,4 +21,8 @@ def add_sys_path(cur_path, to_parent_num=0, insert_to_head=True):
             sys.path.insert(0, cur_path)
         else:
             sys.path.append(cur_path)
-            
+
+
+def listdir_full_path(dirpath):
+    dirpath = path(dirpath)
+    return [dirpath/p for p in os.listdir(dirpath)]
