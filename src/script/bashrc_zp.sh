@@ -7,10 +7,11 @@ export HF_ENDPOINT="https://hf-mirror.com"
 
 # alias psa="ps -aux"
 alias psa="ps -aux | grep -v grep"
+alias pszp="ps -aux | grep -v grep | grep -v .vscode-server | grep zp | grep -v 'ps -aux'"
 alias ls="ls --color=auto"
 alias condaa="conda activate"
 alias condada="conda deactivate"
-alias listusage="du -h -d 1 | sort -hr"
+alias lsize="du -h -d 1 | sort -hr"
 alias kkgpu="watch --color -n1 gpustat -cpu --color"
 
 ## source ~/.bashrc

@@ -4,6 +4,9 @@ ps -aux | grep -v grep
 
 watch --color -n1 gpustat -cpu --color
 
+chmod 700 .
+chmod -R 700 .  # recursively chmod
+
 
 # check port
 netstat -tunlp | grep [port]
