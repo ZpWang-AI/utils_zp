@@ -3,12 +3,14 @@ from typing import *
 
 
 class Datetime_:
-    def __init__(self, time_:Union[datetime.datetime, str, List[int], Tuple[int]]=None):
+    def __init__(self, time_:Union[datetime.datetime, Union[float, int], str, List[int], Tuple[int]]=None):
         if not time_:
             time_ = datetime.datetime.now()
         
         if isinstance(time_, datetime.datetime):
             self.time_ = time_
+        elif isinstance(time_, (float, int)):
+            self.time_ = datetime.datetime.fromtimestamp(time_)
         else:
             if isinstance(time_, str):
                 time_ = re.findall(r'\d+', time_)
@@ -51,6 +53,24 @@ class Datetime_:
 
     def __sub__(self, time_:'Datetime_'):
         return TimeDelta_(self.time_ - time_.time_)
+    
+    def __lt__(self, other):
+        return self.time_ < Datetime_(other).time_
+    
+    def __le__(self, other):
+        return self.time_ <= Datetime_(other).time_
+    
+    def __gt__(self, other):
+        return not self <= other
+    
+    def __ge__(self, other):
+        return not self < other
+    
+    def __eq__(self, other):
+        return self.time_ == Datetime_(other).time_
+    
+    def __ne__(self, other):
+        return not self == other
 
 
 class TimeDelta_:
