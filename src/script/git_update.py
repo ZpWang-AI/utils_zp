@@ -36,10 +36,11 @@ def git_update():
             else:
                 print(f'> git push {remote} main:zp')
                 subprocess.run(['git', 'push', remote, 'main:zp'], check=True)
-            print()
         except subprocess.CalledProcessError as e:
             print(f"> Error pushing to {remote}:\n{e}")
             return
+
+    print('> Git Update Done!')
 
 
 if __name__ == '__main__':
