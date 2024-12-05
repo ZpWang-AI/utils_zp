@@ -28,7 +28,7 @@ def git_update():
             return
 
     # Step 3: Git push to each remote
-    for remote in remotes.keys():
+    for remote, url in remotes.items():
         try:
             if 'github.com' in url:
                 print(f"> git push {remote} main:main")
