@@ -1,4 +1,5 @@
 from .bg_python import run_python_background
+from .git_update import git_update
 from .update_bashrc import update_bashrc
 
 
@@ -8,6 +9,8 @@ Here're the new commands in utils_zp:
 
 > bgpy
     run python in background
+> gitupdate
+    update current git repo, pull from remotes and push to remotes(branch zp)
 > update_bashrc
     add customized settings into ~/.bashrc
 > zp_test
