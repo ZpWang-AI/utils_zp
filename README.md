@@ -3,8 +3,12 @@
 Utilities used by zpwang.
 
 ~~~sh
+# install
 cd utils_zp
 pip install -e .
+
+# show new cmds
+zp
 ~~~
 
 ## Rules of file naming
