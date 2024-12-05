@@ -7,10 +7,13 @@ def git_update():
     try:
         remotes_output = subprocess.check_output(['git', 'remote', '-v'], text=True)
         remotes = {}
+        print('> Remote found:')
         for line in remotes_output.strip().splitlines():
             name, url = line.split()[:2]  # Get remote name and URL
             remotes[name] = url
-        print("> Remotes found:\n", remotes, '\n')
+        for name, url in remotes.items():
+            print(f'{name:7s}: {url}')
+        print()
     except subprocess.CalledProcessError as e:
         print("> Error fetching remotes:\n", e)
         return
@@ -40,7 +43,7 @@ def git_update():
             print(f"> Error pushing to {remote}:\n{e}")
             return
 
-    print('> Git Update Done!')
+    print('\n> Git Update Done!')
 
 
 if __name__ == '__main__':
