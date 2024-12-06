@@ -42,6 +42,9 @@ def git_update():
             else:
                 print(f'> git push {remote} main:zp')
                 subprocess.run(['git', 'push', remote, 'main:zp'], check=True)
+                host_name, host_repo_path = url.lstrip('ssh://').split(':', 1)
+                print(f'> ssh {host_name} \"cd {host_repo_path} && git merge zp\"')
+                subprocess.run(f'ssh {host_name} \"cd {host_repo_path} && git merge zp\"', shell=True, check=True)
             print()
         except subprocess.CalledProcessError as e:
             print(f"> Error pushing to {remote}:\n{e}")
