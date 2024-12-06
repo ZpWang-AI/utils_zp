@@ -1,12 +1,14 @@
 import os
 import subprocess
 
+from typing import *
+
 
 def git_update():
     # Step 1: Get all remotes
     try:
         remotes_output = subprocess.check_output(['git', 'remote', '-v'], text=True)
-        remotes = {}
+        remotes:Dict[str,str] = {}
         print('> Remote found:')
         for line in remotes_output.strip().splitlines():
             name, url = line.split()[:2]  # Get remote name and URL
@@ -34,8 +36,9 @@ def git_update():
     for remote, url in remotes.items():
         try:
             if 'github.com' in url:
-                print(f"> git push {remote} main:main")
-                subprocess.run(['git', 'push', remote, 'main:main'], check=True)
+                if 'zp' in url.lower():
+                    print(f"> git push {remote} main:main")
+                    subprocess.run(['git', 'push', remote, 'main:main'], check=True)
             else:
                 print(f'> git push {remote} main:zp')
                 subprocess.run(['git', 'push', remote, 'main:zp'], check=True)
