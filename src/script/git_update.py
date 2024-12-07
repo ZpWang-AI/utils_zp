@@ -2,9 +2,17 @@ import os
 import subprocess
 
 from typing import *
+from pathlib import Path as path
 
 
-def git_update():
+def git_update(repo_path=None):
+    if repo_path is None:
+        repo_path = path(os.getcwd())
+    else:
+        repo_path = path(repo_path)
+    os.chdir(repo_path)
+    print(f'> `{repo_path.stem}` Git Update Starts ...')
+
     # Step 1: Get all remotes
     try:
         remotes_output = subprocess.check_output(['git', 'remote', '-v'], text=True)
@@ -50,11 +58,25 @@ def git_update():
             print(f"> Error pushing to {remote}:\n{e}")
             return
 
-    print('> Git Update Done!')
+    # submodules = subprocess.check_output('git config --file .gitmodules --get-regexp path', shell=True, text=True)
+    submodules = subprocess.run('git config --file .gitmodules --list', shell=True, text=True, capture_output=True).stdout
+    if submodules is not None:
+        for line in submodules.strip().splitlines():
+            k, v = line.split('=', 1)
+            if k.split('.')[-1] == 'path':
+                git_update(repo_path/v)
+
+    print(f'> `{repo_path.stem}` Git Update Done!')
+
 
 
 if __name__ == '__main__':
-    # Example usage
-    repo_path = r'D:\ZpWang\Projects\01.04-utils\utils_zp'  # Replace with your repository path
-    os.chdir(repo_path)
-    git_update()
+    repos = [
+        r'D:\ZpWang\Projects\01.04-utils\utils_zp',
+        r'D:\ZpWang\Projects\02.01-IDRR_data\IDRR_data',
+        r'D:\ZpWang\Projects\02.09-Trainer\Trainer_zp',
+        r'D:\ZpWang\Projects\02.06-LLM_API\LLM_API',
+        # r'D:\ZpWang\Projects\02.08-LLaMA\LLaMA-Factory_zp'
+    ]
+    for repo in repos:
+        git_update(repo)
