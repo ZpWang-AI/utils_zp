@@ -6,12 +6,22 @@ from pathlib import Path as path
 
 
 def git_update(repo_path=None):
+    # cd to target path
     if repo_path is None:
         repo_path = path(os.getcwd())
     else:
         repo_path = path(repo_path)
     os.chdir(repo_path)
     print(f'> `{repo_path.stem}` Git Update Starts ...')
+
+    # update submodule first
+    # submodules = subprocess.check_output('git config --file .gitmodules --get-regexp path', shell=True, text=True)
+    submodules = subprocess.run('git config --file .gitmodules --list', shell=True, text=True, capture_output=True).stdout
+    if submodules is not None:
+        for line in submodules.strip().splitlines():
+            k, v = line.split('=', 1)
+            if k.split('.')[-1] == 'path':
+                git_update(repo_path/v)
 
     # Step 1: Get all remotes
     try:
@@ -57,14 +67,6 @@ def git_update(repo_path=None):
         except subprocess.CalledProcessError as e:
             print(f"> Error pushing to {remote}:\n{e}")
             return
-
-    # submodules = subprocess.check_output('git config --file .gitmodules --get-regexp path', shell=True, text=True)
-    submodules = subprocess.run('git config --file .gitmodules --list', shell=True, text=True, capture_output=True).stdout
-    if submodules is not None:
-        for line in submodules.strip().splitlines():
-            k, v = line.split('=', 1)
-            if k.split('.')[-1] == 'path':
-                git_update(repo_path/v)
 
     print(f'> `{repo_path.stem}` Git Update Done!')
 
