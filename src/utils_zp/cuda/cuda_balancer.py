@@ -1,7 +1,6 @@
 from .utils_cuda import *
 
 
-
 class CUDABalancer:
     def __init__(
         self, 

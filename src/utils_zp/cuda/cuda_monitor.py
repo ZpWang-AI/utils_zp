@@ -17,7 +17,7 @@ class CUDAMemoryMonitor:
         total_mem = CUDAUtils.query_cuda_memory(
             cuda_id=cuda_ids[0], target='total',
         )
-        json_dump(total_mem, save_filepath)
+        auto_dump(total_mem, save_filepath)
         self.process = threading.Thread(
             target=self.monitor, daemon=True,
         )
@@ -32,7 +32,7 @@ class CUDAMemoryMonitor:
             ]
             monitor_time = int(time.time()-self.start_time)
 
-            json_dump([monitor_time, mems], self.save_filepath)
+            auto_dump([monitor_time, mems], self.save_filepath)
             
             time.sleep(self.monitor_gap)
     
@@ -45,7 +45,7 @@ class CUDAMemoryMonitor:
         import numpy as np
         from matplotlib import pyplot as plt
         
-        saved_res = json_load(save_filepath)
+        saved_res = auto_load(save_filepath)
         if not saved_res:
             raise Exception('wrong result')
         
