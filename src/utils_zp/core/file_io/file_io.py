@@ -141,7 +141,7 @@ class FileIO:
             yaml.dump(obj, f, sort_keys=sort_keys)
 
 
-def auto_load(filepath, force=True):
+def auto_load(filepath, force=False):
     filepath = path(filepath)
     func_map = {
         '.csv': FileIO.csv_load,
@@ -163,7 +163,7 @@ def auto_load(filepath, force=True):
         return res
 
 
-def auto_dump(obj, filepath, force=True):
+def auto_dump(obj, filepath, force=False):
     filepath = path(filepath)
     func_map = {
         '.csv': FileIO.csv_dump,

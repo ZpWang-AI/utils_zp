@@ -13,7 +13,7 @@ class ExpArgs(AttrDict):
         
     @property
     def version(self):
-        return '.'.join(self._version_info_list)
+        return '.'.join(map(str, self._version_info_list))
             
     def format_part(self):    
         for p in range(1000):

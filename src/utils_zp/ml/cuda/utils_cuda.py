@@ -68,7 +68,7 @@ class CUDAUtils:
             time.sleep(wait_seconds)
     
     @staticmethod
-    def set_cuda_visible(target_mem_mb=10000, cuda_cnt=1, device_range:List[int]=None):
+    def set_cuda_visible(target_mem_mb=10000, cuda_cnt=1, device_range:List[int]=None) -> str:
         free_cuda_ids = CUDAUtils.get_free_cudas(
             target_mem_mb=target_mem_mb,
             cuda_cnt=cuda_cnt,
