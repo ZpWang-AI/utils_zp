@@ -11,6 +11,9 @@ examples:
     gitupdate .
     gitupdate ./abc
 
+or do it in below py file
+{path(__file__).parent/"git_update_sample.py"}
+
 {__file__}
 '''.strip()
 )
@@ -21,11 +24,12 @@ def gitupdate_cmd(repo_path=None):
         print(gitupdate.readme)
         return
 
-    repo_path = path(sys.argv[1])
+    repo_path = sys.argv[1]
     git_update(repo_path)
 
 
 def git_update(repo_path):
+    repo_path = path(repo_path)
     os.chdir(repo_path)
     print(f'> `{repo_path.stem}` Git Update Starts ...')
 
@@ -87,14 +91,4 @@ def git_update(repo_path):
 
 
 
-if __name__ == '__main__':
-    repos = [
-        r'D:\ZpWang\Projects\01.04-utils\utils_zp',
-        r'D:\ZpWang\Projects\02.01-IDRR_data\IDRR_data',
-        r'D:\ZpWang\Projects\02.08-LLaMA\LLaMA-Factory_zp',
-        r'D:\ZpWang\Projects\02.08-LLaMA\LLaMA-Factory_zp\LLaMA-Factory',
-        # r'D:\ZpWang\Projects\02.08-LLaMA\LLaMA-Factory_zp'
-    ]
-    for repo in repos:
-        git_update(repo)
 
