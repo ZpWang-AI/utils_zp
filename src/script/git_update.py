@@ -42,6 +42,7 @@ def git_update(repo_path):
             if k.split('.')[-1] == 'path':
                 git_update(repo_path/v)
 
+    os.chdir(repo_path)
     # Step 1: Get all remotes
     try:
         remotes_output = subprocess.check_output(['git', 'remote', '-v'], text=True)
