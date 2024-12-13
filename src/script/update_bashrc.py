@@ -1,10 +1,27 @@
-import sys, os
-import subprocess
-import datetime
-from pathlib import Path as path
+from ._utils import *
 
 
-def update_bashrc():
+update_bashrc = Script(
+    cmd = 'update_bashrc',
+    intro = 'add customized settings into ~/.bashrc (only for linux)',
+    readme = f'''
+update_bashrc .
+
+{__file__}
+'''.strip()
+)
+
+
+
+def update_bashrc_cmd():
+    if len(sys.argv) == 1:
+        print(update_bashrc.readme)
+        return
+
+    update_bashrc_()
+
+
+def update_bashrc_():
     bashrc_zp_path = path(__file__).parent/'bashrc_zp.sh'
     bashrc_zp_local_path = path(__file__).parent/'bashrc_zp.local.sh'
     bashrc_zp_local_path.touch()

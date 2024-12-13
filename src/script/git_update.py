@@ -1,16 +1,31 @@
-import os
-import subprocess
-
-from typing import *
-from pathlib import Path as path
+from ._utils import *
 
 
-def git_update(repo_path=None):
-    # cd to target path
-    if repo_path is None:
-        repo_path = path(os.getcwd())
-    else:
-        repo_path = path(repo_path)
+gitupdate = Script(
+    cmd = 'gitupdate',
+    intro = 'update repo, pull from and push to remotes (branch main)\n\trecursively update submodules',
+    readme = f'''
+gitupdate REPO_PATH
+
+examples:
+    gitupdate .
+    gitupdate ./abc
+
+{__file__}
+'''.strip()
+)
+
+
+def gitupdate_cmd(repo_path=None):
+    if len(sys.argv) == 1:
+        print(gitupdate.readme)
+        return
+
+    repo_path = path(sys.argv[1])
+    git_update(repo_path)
+
+
+def git_update(repo_path):
     os.chdir(repo_path)
     print(f'> `{repo_path.stem}` Git Update Starts ...')
 
@@ -68,7 +83,7 @@ def git_update(repo_path=None):
             print(f"> Error pushing to {remote}:\n{e}")
             return
 
-    print(f'> `{repo_path.stem}` Git Update Done!')
+    print(f'> ||| {repo_path.stem} ||| Git Update Done!\n')
 
 
 
@@ -76,9 +91,10 @@ if __name__ == '__main__':
     repos = [
         r'D:\ZpWang\Projects\01.04-utils\utils_zp',
         r'D:\ZpWang\Projects\02.01-IDRR_data\IDRR_data',
-        r'D:\ZpWang\Projects\02.09-Trainer\Trainer_zp',
-        r'D:\ZpWang\Projects\02.06-LLM_API\LLM_API',
+        r'D:\ZpWang\Projects\02.08-LLaMA\LLaMA-Factory_zp',
+        r'D:\ZpWang\Projects\02.08-LLaMA\LLaMA-Factory_zp\LLaMA-Factory',
         # r'D:\ZpWang\Projects\02.08-LLaMA\LLaMA-Factory_zp'
     ]
     for repo in repos:
         git_update(repo)
+

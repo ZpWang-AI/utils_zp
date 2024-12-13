@@ -1,24 +1,36 @@
-def run_python_background():
-    import sys
-    import subprocess
-    import datetime
-    from pathlib import Path as path
+from ._utils import *
 
-    if len(sys.argv) == 1:
-        print('''
+
+bgpy = Script(
+    cmd = 'bgpy',
+    intro = 'run python in background',
+    readme = f'''
 bgpy [EXE_PATH] PYTHON_PATH
 
 examples:
     bgpy ~test.py ( = bgpy python ~test.py)
     bgpy ~/miniconda3/bin/python ~test.py
-        '''.strip())
+
+{__file__}
+'''.strip()
+)
+
+
+
+def bgpy_cmd():
+    if len(sys.argv) == 1:
+        print(bgpy.readme)
         return
     elif len(sys.argv) == 2:
         exe_path = 'python'
         py_path = sys.argv[1]
     elif len(sys.argv) == 3:
         exe_path, py_path = sys.argv[1:]
-    
+
+    run_python_background(exe_path, py_path)
+
+
+def run_python_background(exe_path, py_path):
     log_path = f'{datetime.datetime.now()}.log'
     cmd = f'{exe_path} "{py_path}"'
     print(cmd)

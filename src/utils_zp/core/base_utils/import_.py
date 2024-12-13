@@ -6,6 +6,7 @@ import time, datetime
 import tqdm, traceback
 import subprocess, threading
 import random
+import dataclasses
 
 from typing import *
 from pathlib import Path as path

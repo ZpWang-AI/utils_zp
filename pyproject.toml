@@ -16,13 +16,15 @@ classifiers = [
     # "Operating System :: OS Independent",
 ]
 
+# -----
 [project.scripts]
-zp = "script:zp_help"
-bgpy = "script:run_python_background"
-gitupdate = "script:git_update"
-update_bashrc = "script:update_bashrc"
-zp_test = "script:zp_cmd_test"
-# bgpy = "utils_zp.script.bg_python:run_python_background"
+zp = "script:zp_cmd"
+bgpy = "script:bgpy_cmd"
+gitupdate = "script:gitupdate_cmd"
+update_bashrc = "script:update_bashrc_cmd"
+zp_test = "script:zp_test_cmd"
+# -----
+
 
 # [build-system]
 # requires = ["hatchling"]

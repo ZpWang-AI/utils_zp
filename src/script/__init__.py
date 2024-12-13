@@ -1,27 +1,29 @@
-from .bg_python import run_python_background
-from .git_update import git_update
-from .update_bashrc import update_bashrc
+from ._utils import *
+from .bg_python import *
+from .git_update import *
+from .test_cmd import *
+from .update_bashrc import *
 
 
-def zp_help():
-    print('''
-Here're the new commands in utils_zp:
-
-> bgpy
-    run python in background
-> gitupdate
-    update current git repo, pull from remotes and push to remotes (branch zp)
-> update_bashrc (only for linux)
-    add customized settings into ~/.bashrc
-> zp_test
-    test command
-    '''.strip())
+zp = Script(
+    cmd = 'zp',
+    intro = 'new command help',
+    readme = '',
+)
 
 
-def zp_cmd_test():
-    import subprocess
-    subprocess.Popen('source ~/.bashrc')
-    print(__file__)
-    # import subprocess
-    # print(1)
-    # subprocess.run('ls', shell=True)
+script_list = [
+    zp,
+    bgpy,
+    gitupdate,
+    update_bashrc,
+    zp_test,
+]
+
+
+def zp_cmd():
+    print('Here\'re the new commands in utils_zp:\n')
+    for script in script_list:
+        print(f'> {script.cmd}\n\t{script.intro}')
+    print('\nSee details by input corresponding cmd.')
+
