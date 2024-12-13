@@ -11,16 +11,22 @@ def make_path(dir_path=None, file_path=None):
         dir_path.mkdir(parents=True, exist_ok=True)
 
 
-def add_sys_path(cur_path, to_parent_num=0, insert_to_head=True):
+def add_sys_path(cur_path, to_parent_num=0, insert_to_head=True) -> path:
+    '''
+    for _ in range(to_parent_num):
+        cur_path = cur_path.parent
+    sys.path.insert(0, cur_path) \\
+    return cur_path
+    '''
     cur_path = path(cur_path)
     for _ in range(to_parent_num):
         cur_path = cur_path.parent
-    cur_path = str(cur_path)
     if cur_path not in sys.path:
         if insert_to_head:
-            sys.path.insert(0, cur_path)
+            sys.path.insert(0, str(cur_path))
         else:
-            sys.path.append(cur_path)
+            sys.path.append(str(cur_path))
+    return cur_path
 
 
 def listdir_full_path(dirpath):
