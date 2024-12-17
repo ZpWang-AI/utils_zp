@@ -29,7 +29,7 @@ def gitupdate_cmd(repo_path=None):
 
 
 def git_update(repo_path):
-    repo_path = path(repo_path)
+    repo_path = path(repo_path).resolve()
     os.chdir(repo_path)
     print(f'> `{repo_path.stem}` Git Update Starts ...')
 
