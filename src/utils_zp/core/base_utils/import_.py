@@ -14,6 +14,7 @@ from copy import deepcopy as dcopy
 from traceback import format_exc, print_exc
 from builtins import print as builtin_print
 from functools import wraps
+from dataclasses import dataclass, field
 
 
 if 0:
