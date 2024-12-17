@@ -80,7 +80,7 @@ class FileIO:
                 
         obj_str = json_dumps_force(obj, indent)
         with open(filepath, mode=mode, encoding=encoding)as f:
-            f.write(obj_str)
+            f.write(obj_str+'\n')
     
     @classmethod
     def txt_load(cls, filepath, encoding='utf8'):

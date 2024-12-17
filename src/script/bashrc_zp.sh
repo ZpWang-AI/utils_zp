@@ -12,6 +12,7 @@ alias ls="ls --color=auto"
 alias condaa="conda activate"
 alias condada="conda deactivate"
 alias lsize="du -h -d 1 | sort -hr"
+alias ldisk="df -h | grep -v /run/user/"
 alias kkgpu="watch --color -n1 gpustat -cpu --color"
 
 ## source ~/.bashrc
