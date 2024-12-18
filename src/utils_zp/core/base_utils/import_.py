@@ -23,6 +23,7 @@ if 0:
     import torch
     import torch.nn as nn
     import transformers
+    import matplotlib.pyplot as plt
 
 
 def import_np():
@@ -42,4 +43,8 @@ def import_torch():
 def import_transformer():
     global transformers
     import transformers
+
+def import_plt():
+    global plt
+    import matplotlib.pyplot as plt
     
