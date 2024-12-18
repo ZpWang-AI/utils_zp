@@ -5,7 +5,11 @@ update_bashrc = Script(
     cmd = 'update_bashrc',
     intro = 'add customized settings into ~/.bashrc (only for linux)',
     readme = f'''
-update_bashrc .
+`update_bashrc .`
+
+write in below files:
+{path(__file__).parent/'bashrc_zp.sh'}
+{path(__file__).parent/'bashrc_zp.local.sh'}
 
 {__file__}
 '''.strip()
