@@ -6,6 +6,7 @@ gitupdate = Script(
     intro = 'update repo, pull from and push to remotes (branch main)\n\trecursively update submodules',
     readme = f'''
 gitupdate REPO_PATH
+ignore remote if remote name startswith `_`
 
 examples:
     gitupdate .
@@ -50,6 +51,8 @@ def git_update(repo_path):
         print('> Remote found:')
         for line in remotes_output.strip().splitlines():
             name, url = line.split()[:2]  # Get remote name and URL
+            if name.startswith('_'):
+                continue
             remotes[name] = url
         for name, url in remotes.items():
             print(f'{name:7s}: {url}')
