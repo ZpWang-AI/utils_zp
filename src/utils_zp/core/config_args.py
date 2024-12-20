@@ -105,20 +105,26 @@ class ConfigArgs:
 _type_var = TypeVar('_args_cls')
 
 def config_args(cls:_type_var) -> Union[_type_var, Type[ConfigArgs]]:
-# def config_args(cls:_typevar):
-    # new_cls = cls
-    # cls = dataclasses.dataclass(cls)
-    # cls = type(cls.__name__, (cls, ConfigArgs), {})
+    '''
+    add ConfigArgs attrs
+    - set_create_time
+    - format_part
+    - arg_dic
+    - __repr__
+    '''
 
-    # cls.__repr__ = ConfigArgs.__repr__
-    # return cls
+    if issubclass(cls, ConfigArgs):
+        @dataclass
+        class _cls(cls):
+            def __repr__(self):
+                return ConfigArgs.__repr__(self)
+    else:
+        @dataclasses.dataclass
+        class _cls(cls, ConfigArgs):
+            create_time:Datetime_ = Datetime_()
 
-    @dataclasses.dataclass
-    class _cls(cls, ConfigArgs):
-        create_time:Datetime_ = Datetime_()
-
-        def __repr__(self):
-            return ConfigArgs.__repr__(self)
+            def __repr__(self):
+                return ConfigArgs.__repr__(self)
 
     return _cls
     # setattr(cls, 'abbbb', 1)
