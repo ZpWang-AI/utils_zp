@@ -112,20 +112,19 @@ def config_args(cls:_type_var) -> Union[_type_var, Type[ConfigArgs]]:
     - arg_dic
     - __repr__
     '''
-# def config_args(cls:_typevar):
-    # new_cls = cls
-    # cls = dataclasses.dataclass(cls)
-    # cls = type(cls.__name__, (cls, ConfigArgs), {})
 
-    # cls.__repr__ = ConfigArgs.__repr__
-    # return cls
+    if issubclass(cls, ConfigArgs):
+        @dataclass
+        class _cls(cls):
+            def __repr__(self):
+                return ConfigArgs.__repr__(self)
+    else:
+        @dataclasses.dataclass
+        class _cls(cls, ConfigArgs):
+            create_time:Datetime_ = Datetime_()
 
-    @dataclasses.dataclass
-    class _cls(cls, ConfigArgs):
-        create_time:Datetime_ = Datetime_()
-
-        def __repr__(self):
-            return ConfigArgs.__repr__(self)
+            def __repr__(self):
+                return ConfigArgs.__repr__(self)
 
     return _cls
     # setattr(cls, 'abbbb', 1)
