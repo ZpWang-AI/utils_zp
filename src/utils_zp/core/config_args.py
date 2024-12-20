@@ -105,6 +105,13 @@ class ConfigArgs:
 _type_var = TypeVar('_args_cls')
 
 def config_args(cls:_type_var) -> Union[_type_var, Type[ConfigArgs]]:
+    '''
+    add ConfigArgs attrs
+    - set_create_time
+    - format_part
+    - arg_dic
+    - __repr__
+    '''
 # def config_args(cls:_typevar):
     # new_cls = cls
     # cls = dataclasses.dataclass(cls)
