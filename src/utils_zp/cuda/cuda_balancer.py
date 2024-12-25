@@ -5,11 +5,11 @@ class CUDABalancer:
     def __init__(
         self, 
         cuda_ids:List[int]=None, 
-        rest_mem_mb=None, 
-        target_mem_mb=None, 
-        keep_running=False, 
-        refresh_gap=0.1, 
-        wait_before_start=10
+        rest_mem_mb:Union[int,float]=None, 
+        target_mem_mb:Union[int,float]=None, 
+        keep_running:bool=False, 
+        refresh_gap:float=0.1, 
+        wait_before_start:Union[int,float]=10
     ) -> None:
         if cuda_ids is not None:
             self.cuda_ids = cuda_ids
@@ -26,9 +26,9 @@ class CUDABalancer:
             raise "rest_mem_mb and target_mem_mb are all None"
         
         self.keep_balance = True
-        self.keep_running = keep_running
-        self.refresh_gap = refresh_gap
-        self.wait_before_start = wait_before_start + 0.001
+        self.keep_running = bool(keep_running)
+        self.refresh_gap = float(refresh_gap)
+        self.wait_before_start = float(wait_before_start) + 0.001
         
         self.run_process_list = [threading.Thread(
             target=self.run, daemon=True, kwargs={'cuda_id': cuda_id})
