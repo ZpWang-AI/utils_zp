@@ -71,7 +71,7 @@ class CUDABalancer:
 
     def balance(self):
         time.sleep(self.wait_before_start)
-        print('start balancer')
+        print('balancer starts')
         
         tensor_stacks = [
             [[], []]
@@ -104,4 +104,5 @@ class CUDABalancer:
         self.balance_process.join()
         for process in self.run_process_list:
             process.join()
-
+            
+        print('balancer ends')
