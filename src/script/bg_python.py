@@ -31,18 +31,22 @@ def bgpy_cmd():
 
 
 def run_python_background(exe_path, py_path):
-    log_path = f'{datetime.datetime.now()}.log'
-    cmd = f'{exe_path} "{py_path}"'
-    print(cmd)
+    log_path = path(py_path).parent / f'{datetime.datetime.now()}.log'
+    # cmd = f'{exe_path} "{py_path}"'
+    # print(cmd)
     
     cmd1 = f'nohup {exe_path} "{py_path}" 1>> "{log_path}" 2>&1 &'
+    print(cmd1)
     cmd2 = f'ps -aux | grep -v grep | grep -v /bin/bgpy | grep "{exe_path} {py_path}"'
     gap_line = '*'*60
     with open(log_path, 'w', encoding='utf8')as f:
         f.write(cmd1+'\n')
         f.write(cmd2+'\n')
-        f.write(gap_line+'\n\n')
-    subprocess.run(cmd1, shell=True)
-    subprocess.run(cmd2, shell=True)
 
+    subprocess.run(cmd1, shell=True)
+    process_info = subprocess.run(cmd2, shell=True, text=True, capture_output=True)
+
+    with open(log_path, 'a', encoding='utf8')as f:
+        f.write(process_info+'\n')
+        f.write(gap_line+'\n\n')
     
