@@ -19,9 +19,9 @@ class CUDABalancer:
         if rest_mem_mb is not None:
             self.target_mem_mb = CUDAUtils.query_cuda_memory(
                 cuda_id=self.cuda_ids[0], target='total',
-            ) - rest_mem_mb
+            ) - float(rest_mem_mb)
         elif target_mem_mb is not None:
-            self.target_mem_mb = target_mem_mb
+            self.target_mem_mb = float(target_mem_mb)
         else:
             raise "rest_mem_mb and target_mem_mb are all None"
         
