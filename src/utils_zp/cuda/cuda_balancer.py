@@ -95,6 +95,9 @@ class CUDABalancer:
                 x *= x
             time.sleep(0.001)
 
+    def start(self):
+        self.balance()
+        
     def close(self):
         self.keep_balance = False
         self.keep_running = False
