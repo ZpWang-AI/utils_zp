@@ -21,6 +21,8 @@ classifiers = [
 zp = "script:zp_cmd"
 bgpy = "script:bgpy_cmd"
 gitupdate = "script:gitupdate_cmd"
+killzp = "script:killzp_cmd"
+pszp = "script:pszp_cmd"
 update_bashrc = "script:update_bashrc_cmd"
 zp_test = "script:zp_test_cmd"
 # -----

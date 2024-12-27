@@ -1,6 +1,8 @@
 from ._utils import *
 from .bg_python import *
 from .git_update import *
+from .killzp import *
+from .pszp import *
 from .test_cmd import *
 from .update_bashrc import *
 
@@ -16,6 +18,8 @@ script_list = [
     zp,
     bgpy,
     gitupdate,
+    killzp,
+    pszp,
     update_bashrc,
     zp_test,
 ]
