@@ -40,13 +40,14 @@ def run_python_background(exe_path, py_path):
     cmd2 = f'ps -aux | grep -v grep | grep -v /bin/bgpy | grep "{exe_path} {py_path}"'
     gap_line = '*'*60
     with open(log_path, 'w', encoding='utf8')as f:
-        f.write(cmd1+'\n')
-        f.write(cmd2+'\n')
+        f.write(cmd1+'\n\n')
+        f.write(cmd2+'\n\n')
 
     subprocess.run(cmd1, shell=True)
     process_info = subprocess.run(cmd2, shell=True, text=True, capture_output=True)
 
     with open(log_path, 'a', encoding='utf8')as f:
-        f.write(process_info+'\n')
+        f.write(process_info.stdout+'\n')
         f.write(gap_line+'\n\n')
     
+    print(log_path.absolute())

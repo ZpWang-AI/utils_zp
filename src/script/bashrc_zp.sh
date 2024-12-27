@@ -7,7 +7,7 @@ export HF_ENDPOINT="https://hf-mirror.com"
 
 # alias psa="ps -aux"
 alias psa="ps -aux | grep -v grep"
-alias pszp="ps -aux | grep -v grep | grep -v .vscode-server | grep zp | grep -v 'ps -aux'"
+alias pszp="ps -aux | grep -v grep | grep -v .vscode-server | grep -v /code-server/ | grep -v /gpustat | grep zp | grep -v 'ps -aux'"
 alias ls="ls --color=auto"
 alias condaa="conda activate"
 alias condada="conda deactivate"
