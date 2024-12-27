@@ -60,6 +60,7 @@ def pszp_func() -> List[ProcessInfo]:
             'ps -aux' not in line and
             '/tmp/tmp' not in line and
             '/bin/killzp' not in line and
+            '/bin/pszp' not in line and
             1
         ):
             res.append(ProcessInfo(*line.split(maxsplit=10)))
