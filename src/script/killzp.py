@@ -25,7 +25,7 @@ def killzp_func():
         'kill target (like `a` or `0 1 2`):\n'
     )
     if kill_target.lower() == 'a':
-        kill_target = list(range(zp_process))
+        kill_target = list(range(len(zp_process)))
     else:
         kill_target = list(map(int, kill_target.split()))
     for p in kill_target:
