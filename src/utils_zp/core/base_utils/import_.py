@@ -15,6 +15,27 @@ from traceback import format_exc, print_exc
 from builtins import print as builtin_print
 from functools import wraps
 from dataclasses import dataclass, field
+from importlib import import_module
+
+
+class LazyImport:
+    def __init__(self, module_name, package=None):
+        self.module_name = module_name
+        self.package = package
+        self.module = None
+    
+    def __getattr__(self, name):
+        if self.module is None:
+            self.module = import_module(self.module_name, self.package)
+        return getattr(self.module, name)
+
+
+np = LazyImport('numpy')
+pd = LazyImport('pandas')
+torch = LazyImport('torch')
+nn = LazyImport('torch', 'nn')
+transformers = LazyImport('transformers')
+plt = LazyImport('matplotlib', 'pyplot')
 
 
 if 0:
@@ -26,25 +47,4 @@ if 0:
     import matplotlib.pyplot as plt
 
 
-def import_np():
-    global np
-    import numpy as np
-
-def import_pd():
-    global pd
-    import pandas as pd
-
-def import_torch():
-    global torch
-    import torch
-    global nn
-    import torch.nn as nn
-    
-def import_transformer():
-    global transformers
-    import transformers
-
-def import_plt():
-    global plt
-    import matplotlib.pyplot as plt
     
