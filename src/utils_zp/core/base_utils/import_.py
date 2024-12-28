@@ -33,9 +33,9 @@ class LazyImport:
 np = LazyImport('numpy')
 pd = LazyImport('pandas')
 torch = LazyImport('torch')
-nn = LazyImport('torch', 'nn')
+nn = LazyImport('torch.nn')
 transformers = LazyImport('transformers')
-plt = LazyImport('matplotlib', 'pyplot')
+plt = LazyImport('matplotlib.pyplot')
 
 
 if 0:
@@ -47,4 +47,3 @@ if 0:
     import matplotlib.pyplot as plt
 
 
-    
