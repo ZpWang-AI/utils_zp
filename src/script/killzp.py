@@ -22,7 +22,7 @@ def killzp_cmd():
 def killzp_func():
     zp_process = pszp_func()
     kill_target = input(
-        'kill target (like `a` or `0 1 2`):\n'
+        '\nkill target (like `a` or `0 1 2`):\n'
     )
     if kill_target.lower() == 'a':
         kill_target = list(range(zp_process))
