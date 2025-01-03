@@ -31,6 +31,8 @@ def bgpy_cmd():
 
 
 def run_python_background(exe_path, py_path):
+    assert path(py_path).exists()
+    
     log_path = path(py_path).parent / (
         datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S") + '.log'
     ) 
