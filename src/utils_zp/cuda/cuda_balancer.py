@@ -9,7 +9,8 @@ class CUDABalancer:
         target_mem_mb:Union[int,float]=None, 
         keep_running:bool=False, 
         refresh_gap:float=0.1, 
-        wait_before_start:Union[int,float]=10
+        wait_before_start:Union[int,float]=10,
+        start:bool=True,
     ) -> None:
         if cuda_ids is not None:
             self.cuda_ids = cuda_ids
@@ -40,7 +41,9 @@ class CUDABalancer:
         self.balance_process = threading.Thread(
             target=self.balance, daemon=True,
         )
-        self.balance_process.start()
+
+        if start:
+            self.balance_process.start()
     
     def _balance_one_cuda(self, cuda_id, tensor_stack):
         import torch
@@ -96,7 +99,7 @@ class CUDABalancer:
             time.sleep(0.001)
 
     def start(self):
-        self.balance()
+        self.balance_process.start()
         
     def close(self):
         self.keep_balance = False

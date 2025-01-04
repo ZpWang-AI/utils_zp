@@ -7,7 +7,7 @@ def plot_curve(
     x_range:Tuple[float, float]=None, y_range:Tuple[float, float]=None,
     close:bool=False,
 ):
-    from matplotlib import pyplot as plt
+    # from matplotlib import pyplot as plt
     plt.plot(*xys,)
     plt.title(title)
     if x_name is not None:
