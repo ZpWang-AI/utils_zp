@@ -77,6 +77,9 @@ class FileIO:
                     indent = 4
             elif mode == 'a':
                 indent = None
+
+        if not isinstance(obj, dict) and hasattr(obj, 'arg_dic'):
+            obj = getattr(obj, 'arg_dic')
                 
         obj_str = json_dumps_force(obj, indent)
         with open(filepath, mode=mode, encoding=encoding)as f:
