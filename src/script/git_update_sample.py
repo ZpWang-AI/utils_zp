@@ -9,7 +9,9 @@ if __name__ == '__main__':
     repos = [
         r'D:\ZpWang\Projects\01.04-utils\utils_zp',
         r'D:\ZpWang\Projects\02.01-IDRR_data\IDRR_data',
+        r'D:\ZpWang\Projects\02.06-LLM_API\LLM_API',
         r'D:\ZpWang\Projects\02.08-LLaMA\LLaMA-Factory_zp',
+        r'D:\ZpWang\Projects\02.05-IDRR_Subtext\IDRR_Subtext',
         # r'D:\ZpWang\Projects\02.08-LLaMA\LLaMA-Factory_zp\LLaMA-Factory',
         # r'D:\ZpWang\Projects\02.08-LLaMA\LLaMA-Factory_zp'
     ]
