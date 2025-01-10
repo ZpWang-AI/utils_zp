@@ -83,7 +83,8 @@ def git_update(repo_path):
             else:
                 print(f'> git push {remote} main:zp')
                 subprocess.run(['git', 'push', remote, 'main:zp'], check=True)
-                host_name, host_repo_path = url.lstrip('ssh://').split(':', 1)
+                host_name, host_repo_path = \
+                    (url[6:] if url.startswith('ssh://') else url).split(':', 1)
                 print(f'> ssh {host_name} \"cd {host_repo_path} && git merge zp\"')
                 subprocess.run(f'ssh {host_name} \"cd {host_repo_path} && git merge zp\"', shell=True, check=True)
             print()
