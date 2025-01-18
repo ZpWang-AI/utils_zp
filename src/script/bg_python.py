@@ -34,7 +34,9 @@ def run_python_background(exe_path, py_path):
     assert path(py_path).exists()
     
     log_path = path(py_path).parent / (
-        datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S") + '.log'
+        datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S") + \
+        path(py_path).name + \
+        '.log'
     ) 
     # cmd = f'{exe_path} "{py_path}"'
     # print(cmd)
