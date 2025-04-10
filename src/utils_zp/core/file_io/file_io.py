@@ -1,6 +1,9 @@
 from ..base_utils import *
 
 
+utf8 = 'utf-8'
+
+
 class FileUtilsException(Exception):
     pass
 
@@ -22,15 +25,21 @@ class FileIO:
         return filepath
 
     @classmethod
-    def csv_load(cls, filepath):
+    def csv_load(cls, filepath, iteration=False):
         filepath = cls.fileio_prepocess(
             filepath=filepath,
             is_load=True,
             valid_suffixes=['.csv'],
         )
-        import pandas as pd
-        df = pd.read_csv(filepath)
-        return df
+        if not iteration:
+            import pandas as pd
+            df = pd.read_csv(filepath)
+            return df
+        else:
+            import csv
+            fn = open(filepath, 'r', encoding='utf8')
+            reader = csv.reader(fn)
+            return reader
     
     @classmethod
     def csv_dump(cls, obj:'pd.DataFrame', filepath):
