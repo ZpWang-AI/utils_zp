@@ -5,6 +5,7 @@ description = "utilities of zp"
 # requires-python = ">=3.8"
 dependencies = [
     "tqdm",
+    "gpustat",
 ]
 authors = [
     { name="Zhipang Wang", email="zhipangwang@gmail.com" },
