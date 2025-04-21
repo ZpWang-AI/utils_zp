@@ -29,6 +29,9 @@ def add_sys_path(cur_path, to_parent_num=0, insert_to_head=True) -> path:
     return cur_path
 
 
-def listdir_full_path(dirpath):
+def listdir_full_path(dirpath, sort=True):
     dirpath = path(dirpath)
-    return [dirpath/p for p in os.listdir(dirpath)]
+    son_paths = [dirpath/p for p in os.listdir(dirpath)]
+    if sort:
+        son_paths.sort()
+    return son_paths

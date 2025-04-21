@@ -19,7 +19,7 @@ from importlib import import_module
 
 
 class LazyImport:
-    def __init__(self, module_name, package=None):
+    def __init__(self, module_name:'str', package:'str'=None):
         self.module_name = module_name
         self.package = package
         self.module = None

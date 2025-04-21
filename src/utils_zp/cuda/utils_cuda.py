@@ -5,6 +5,10 @@ def norm_mem_to_mb(mem):
     return int(mem) >> 20
 
 
+def set_cuda_devices(devices:'str'='0,1'):
+    os.environ["CUDA_VISIBLE_DEVICES"] = devices
+
+
 class OneCUDA:
     def __init__(self, cuda_id, info) -> None:
         self.cuda_id:str = str(cuda_id)
