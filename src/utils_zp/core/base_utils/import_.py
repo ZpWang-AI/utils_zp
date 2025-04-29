@@ -7,6 +7,7 @@ import tqdm, traceback
 import subprocess, threading
 import random
 import dataclasses
+import shutil
 
 from typing import *
 from pathlib import Path as path
