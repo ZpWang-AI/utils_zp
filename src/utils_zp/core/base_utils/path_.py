@@ -21,7 +21,7 @@ def add_sys_path(cur_path, to_parent_num=0, insert_to_head=True) -> path:
     cur_path = path(cur_path)
     for _ in range(to_parent_num):
         cur_path = cur_path.parent
-    if cur_path not in sys.path:
+    if str(cur_path) not in sys.path:
         if insert_to_head:
             sys.path.insert(0, str(cur_path))
         else:
