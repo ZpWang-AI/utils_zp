@@ -29,7 +29,7 @@ def gitupdate_cmd(repo_path=None):
     git_update(repo_path)
 
 
-def git_update(repo_path):
+def git_update(repo_path, push_to_github=True):
     repo_path = path(repo_path).resolve()
     os.chdir(repo_path)
     print(f'> `{repo_path.stem}` Git Update Starts ...')
@@ -77,7 +77,8 @@ def git_update(repo_path):
     for remote, url in remotes.items():
         try:
             if 'github.com' in url:
-                if 'zp' in url.lower():
+                # if 'zp' in url.lower():
+                if push_to_github:
                     print(f"> git push {remote} main:main")
                     subprocess.run(['git', 'push', remote, 'main:main'], check=True)
             else:
