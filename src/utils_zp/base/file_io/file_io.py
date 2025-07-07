@@ -1,4 +1,4 @@
-from ..base_utils import *
+from ..core import *
 
 
 utf8 = 'utf-8'

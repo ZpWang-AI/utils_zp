@@ -1,4 +1,4 @@
-from ..core import *
+from ..base import *
 
 
 def norm_mem_to_mb(mem):

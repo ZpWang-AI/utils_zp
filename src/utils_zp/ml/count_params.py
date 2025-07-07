@@ -1,4 +1,4 @@
-from ..core import format_int
+from ..base import format_int
 
 
 def count_parameters(model):
