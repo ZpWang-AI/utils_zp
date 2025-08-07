@@ -1,12 +1,12 @@
 from ..base import *
 
 cv2 = LazyImport('cv2')
-ffmpeg = LazyImport('ffmpeg')
+# ffmpeg = LazyImport('ffmpeg')
 # if 0:
 #     import cv2
 
 
-class Video_:
+class Video_custom:
     def __init__(self, video_path):
         self.video_path = video_path
         self._video_info = {}
@@ -20,37 +20,52 @@ class Video_:
     def close_capture(self, cap):
         cap.release()
 
-    @property
-    def fps(self):
-        if 'fps' in self._video_info:
-            
-
-    def get_video_info(video_path, print_res=False) -> Dict[str, Any]:
-        """
-        return {
-            'fps': fps,  # float
-            'total_frames', 
-            'width': width,  # int
-            'height': height,  # int
-        }
-        """
+    def _query_video_info(self, key):
+        if not self._video_info:
+            cap = self.open_capture()
+            self._video_info ={
+                'fps': cap.get(cv2.CAP_PROP_FPS),
+                'total_frames': int(cap.get(cv2.CAP_PROP_FRAME_COUNT)),
+                'width': int(cap.get(cv2.CAP_PROP_FRAME_WIDTH)),
+                'height': int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+            }
+            self.close_capture(cap)
         
-        fps = cap.get(cv2.CAP_PROP_FPS)
-        width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
-        height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+        if key in self._video_info:
+            return self._video_info[key]
+        else:
+            raise Exception(f'wrong key of video info: {key}')
+    
+    @property
+    def fps(self) -> float:
+        return self._query_video_info('fps')
+    
+    @property
+    def total_frames(self) -> int:
+        return self._query_video_info('total_frames')
 
-        res = {
-            'fps': fps,
-            'width': width,
-            'height': height,
-        }
-        if print_res:
-            print(f'fps: {fps:.1f} | width: {width:d} | height: {height:d}')
-        return res
+    def __len__(self) -> int:
+        return self.total_frames
 
+    @property
+    def duration(self) -> float:
+        return self.total_frames / self.fps
+    
+    @property
+    def width(self) -> int:
+        return self._query_video_info('width')
+    
+    @property
+    def height(self) -> int:
+        return self._query_video_info('height')
+
+    @property
+    def shape(self) -> Tuple[int]:
+        "(height, width)"
+        return (self.height, self.width)
 
     def edit_video(
-        video_path, new_video_path,
+        self, new_video_path,
         width, height, fps,
         terminal_log=False, 
     ):
@@ -58,7 +73,7 @@ class Video_:
         """
         import ffmpeg
 
-        video_path = path(video_path)
+        video_path = path(self.video_path)
         assert video_path.exists()
         new_video_path = str(new_video_path)
         make_path(file_path=new_video_path)
@@ -83,64 +98,49 @@ class Video_:
         # ffmpeg.run(stream)
         return
 
-
-    def iterate_video(video_path) -> list:
-        """
-        return List["PIL.Image"]
-        """
-        import cv2
+    def __getitem__(self, index, cap=None, rgb=True):
+        "return PIL.Image or None"
         from PIL import Image
+        if index < 0:
+            index += self.total_frames
+        if not 0 <= index < self.total_frames:
+            return None
 
-        cap = cv2.VideoCapture(video_path)
-        if not cap.isOpened():
-            raise Exception("Error: Could not open video.")
-
-        images = []
-        while True:
+        if cap is None:
+            cap = self.open_capture()
+            cap.set(cv2.CAP_PROP_POS_FRAMES, index)
             ret, frame = cap.read()
-            if not ret:
-                break
-            rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-            pil_image = Image.fromarray(rgb_frame)
-            images.append(pil_image)
+            self.close_capture(cap)
+        else:
+            cap.set(cv2.CAP_PROP_POS_FRAMES, index)
+            ret, frame = cap.read()
 
-        cap.release()
-        return images
-        
+        if not ret:
+            return None
+        if rgb:
+            frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+        pil_image = Image.fromarray(frame)
+        return pil_image
 
-    def get_video_duration(video_path):
-        import cv2
+    def __iter__(self):
+        def _func():
+            cap = self.open_capture()
+            for _index in range(len(self)):
+                yield self.__getitem__(index=_index, cap=cap)
+            self.close_capture(cap)
+        return _func()
 
-        cap = cv2.VideoCapture(video_path)
-        if not cap.isOpened():
-            raise Exception("Error: Could not open video.")
-
-        fps = cap.get(cv2.CAP_PROP_FPS)
-        frame_count = cap.get(cv2.CAP_PROP_FRAME_COUNT)
-
-        duration = frame_count / fps
-        # duration = float(f'{duration:.2f}')
-        cap.release()
-        return duration
-
-
-    def hash_video(video_path, key_frames=(0,1,2,3,4,-5,-4,-3,-2,-1)) -> str:
+    def hash_str(self, key_frames=(0,1,2,3,4,-5,-4,-3,-2,-1)) -> str:
         """
         total_frame + fps + phash of key frames
         """
-        import cv2
         import imagehash
         from PIL import Image
 
-        cap = cv2.VideoCapture(video_path)
-        if not cap.isOpened():
-            raise Exception("Error: Could not open video.")
+        cap = self.open_capture()
         
-        total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
-        fps = cap.get(cv2.CAP_PROP_FPS)
-        hash_strings = [f'{total_frames}_{fps}_']
-        
-        key_frames = [p if p >=0 else total_frames+p for p in key_frames]
+        hash_strings = [f'{self.total_frames}_{self.fps}_']
+        key_frames = [p if p >=0 else self.total_frames+p for p in key_frames]
         for _frame_id in key_frames:
             cap.set(cv2.CAP_PROP_POS_FRAMES, _frame_id)
             ret, frame = cap.read()
@@ -151,6 +151,7 @@ class Video_:
             hash_value = imagehash.phash(pil_image)
             hash_strings.append(str(hash_value))
         
-        cap.release()
+        self.close_capture(cap)
         final_hash = '_'.join(hash_strings)
         return final_hash
+    
