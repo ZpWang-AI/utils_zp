@@ -9,6 +9,7 @@ export HF_ENDPOINT="https://hf-mirror.com"
 alias psa="ps -aux | grep -v grep"
 alias psaa="ps -aux | grep -v grep | grep -v .vscode-server | grep -v /code-server/ | grep -v gpustat | grep -v 'ps -aux'"
 # alias pszp="ps -aux | grep -v grep | grep -v .vscode-server | grep -v /code-server/ | grep -v /gpustat | grep zp | grep -v 'ps -aux'"
+
 alias ls="ls --color=auto"
 alias condaa="conda activate"
 alias condada="conda deactivate"
@@ -17,3 +18,10 @@ alias ldisk="df -h | grep -v /run/user/"
 alias kkgpu="watch --color -n1 gpustat -cpu --color"
 
 ## source ~/.bashrc
+
+# =====================================================
+# tmux
+alias tmuxa="tmux attach -t"
+alias tmuxk="tmux kill-session -t"
+alias tmuxls="tmux ls"
+alias tmuxrename="tmux rename-session -t"
