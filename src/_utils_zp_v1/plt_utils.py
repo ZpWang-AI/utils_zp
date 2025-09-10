@@ -1,4 +1,4 @@
-from .base import *
+from .core import *
 
 
 def plot_curve(

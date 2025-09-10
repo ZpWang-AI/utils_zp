@@ -21,7 +21,7 @@ def add_sys_path(cur_path, to_parent_num=0, insert_to_head=True) -> path:
     cur_path = path(cur_path)
     for _ in range(to_parent_num):
         cur_path = cur_path.parent
-    if cur_path not in sys.path:
+    if str(cur_path) not in sys.path:
         if insert_to_head:
             sys.path.insert(0, str(cur_path))
         else:
@@ -29,6 +29,20 @@ def add_sys_path(cur_path, to_parent_num=0, insert_to_head=True) -> path:
     return cur_path
 
 
-def listdir_full_path(dirpath):
+def listdir_full_path(dirpath, sort=True):
     dirpath = path(dirpath)
-    return [dirpath/p for p in os.listdir(dirpath)]
+    son_paths = [dirpath/p for p in os.listdir(dirpath)]
+    if sort:
+        son_paths.sort()
+    return son_paths
+
+
+def oswalk_full_path(dirpath, only_file=True) -> Generator[path, None, None]:
+    for dirpath, dirnames, filenames in os.walk(dirpath):
+        if only_file:
+            for p in filenames:
+                yield path(dirpath, p)
+        else:
+            for p in dirnames+filenames:
+                yield path(dirpath, p)
+        
