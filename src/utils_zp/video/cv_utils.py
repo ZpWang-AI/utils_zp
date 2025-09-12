@@ -71,7 +71,12 @@ class Video_custom:
     ):
         """
         """
-        import ffmpeg
+        try:
+            import ffmpeg
+        except Exception as err:
+            print(err)
+            print('Dowload ffmpeg by:\nsudo apt-get install ffmpeg\npip install ffmpeg-python')
+            exit(0)
 
         video_path = path(self.video_path)
         assert video_path.exists()
