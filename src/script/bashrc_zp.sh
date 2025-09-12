@@ -16,6 +16,7 @@ alias condada="conda deactivate"
 alias lsize="du -h -d 1 | sort -hr"
 alias ldisk="df -h | grep -v /run/user/"
 alias kkgpu="watch --color -n1 gpustat -cpu --color"
+alias sourcebashrc="source ~/.bashrc"
 
 ## source ~/.bashrc
 
@@ -25,3 +26,8 @@ alias tmuxa="tmux attach -t"
 alias tmuxk="tmux kill-session -t"
 alias tmuxls="tmux ls"
 alias tmuxrename="tmux rename-session -t"
+
+# =====================================================
+# git
+alias gitr="git remote"
+alias gitra="git remote add"
