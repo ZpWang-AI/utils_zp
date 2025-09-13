@@ -82,6 +82,7 @@ class Video_custom:
         assert video_path.exists()
         new_video_path = str(new_video_path)
         make_path(file_path=new_video_path)
+        assert path(new_video_path).exists()
 
         stream = ffmpeg.input(video_path)
         stream = stream.filter('fps', fps=fps, round='up')
