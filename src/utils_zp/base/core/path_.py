@@ -9,7 +9,7 @@ def make_path(dir_path=None, file_path=None):
         file_path.parent.mkdir(parents=True, exist_ok=True)
         file_path.touch()
     if dir_path is not None:
-        if '~/' in str(dir_path)
+        if '~/' in str(dir_path):
             print('make_path Warning: ~/ in path')
         dir_path = path(dir_path)
         dir_path.mkdir(parents=True, exist_ok=True)
