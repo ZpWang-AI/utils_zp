@@ -58,3 +58,5 @@ def oswalk_full_path(dirpath, only_file=True) -> Generator[path, None, None]:
             for p in dirnames+filenames:
                 yield path(dirpath, p)
         
+
+USERHOMEDIR = path('~').expanduser()
