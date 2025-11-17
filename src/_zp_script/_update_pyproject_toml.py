@@ -13,9 +13,9 @@ def update_pyproject_toml():
         split_line,
         '[project.scripts]\n'
     ]
-    from script import script_list
+    from _zp_script import script_list
     for script in script_list:
-        new_lines.append(f'{script.cmd} = "script:{script.cmd}_cmd"\n')
+        new_lines.append(f'{script.cmd} = "_zp_script:{script.cmd}_cmd"\n')
     new_lines.append(split_line)
     new_lines.append(after)
     auto_dump(''.join(new_lines), toml_file, force=True)

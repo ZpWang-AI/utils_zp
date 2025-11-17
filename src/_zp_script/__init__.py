@@ -3,6 +3,7 @@ from .bg_python import *
 from .git_update import *
 from .killzp import *
 from .pszp import *
+from .show_bashrc import *
 from .test_cmd import *
 from .update_bashrc import *
 
@@ -20,6 +21,7 @@ script_list = [
     gitupdate,
     killzp,
     pszp,
+    show_bashrc,
     update_bashrc,
     zp_test,
 ]
