@@ -17,7 +17,8 @@ class Video_custom:
             raise Exception(f"Error: Could not open video {self.video_path}")
         return cap
     
-    def close_capture(self, cap):
+    @staticmethod
+    def close_capture(cap):
         cap.release()
 
     def _query_video_info(self, key):
@@ -36,6 +37,18 @@ class Video_custom:
         else:
             raise Exception(f'wrong key of video info: {key}')
     
+    def cal_num_frames_by_new_fps(self, new_fps:float) -> int:
+        cap = self.open_capture()
+        old_fps = cap.get(cv2.CAP_PROP_FPS)
+        total_frames = cap.get(cv2.CAP_PROP_FRAME_COUNT)
+        self.close_capture(cap)
+        if new_fps >= old_fps:
+            new_frames = total_frames
+        else:
+            new_frames = total_frames / old_fps * new_fps
+        new_frames = max(new_frames, 1)
+        return int(new_frames+0.1)
+
     @property
     def fps(self) -> float:
         return self._query_video_info('fps')
