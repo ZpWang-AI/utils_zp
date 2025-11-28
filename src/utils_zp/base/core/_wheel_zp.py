@@ -12,5 +12,5 @@ class LazyCall:
 
 
 if __name__ == '__main__':
-    model = LazyCall(lambda x:x+1, 123)
-    print(model())
+    _lazycall = LazyCall(lambda x:x+1, 123)
+    print(_lazycall())
