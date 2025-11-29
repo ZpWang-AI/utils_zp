@@ -49,7 +49,7 @@ def listdir_full_path(dirpath, sort=True):
     return son_paths
 
 
-def oswalk_full_path(dirpath, only_file=True) -> Generator[path, None, None]:
+def oswalk_full_path(dirpath, only_file=True) -> Iterable[path]:
     for dirpath, dirnames, filenames in os.walk(dirpath):
         if only_file:
             for p in filenames:
