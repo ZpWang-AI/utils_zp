@@ -6,5 +6,6 @@ from .custom_dict import *
 
 from .base_decorator import *
 from .config_args import *
+from .file_dict import FileDict
 from .set_process_title import *
 # from .shell_ import *
