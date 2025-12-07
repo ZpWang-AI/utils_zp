@@ -5,7 +5,7 @@ class FileDict:
     def __init__(self, data_dir, digest_size:int=2):
         # max database size = 256**digest_size
         self.data_dir = path(data_dir)
-        make_path(self.data_dir)
+        # make_path(self.data_dir)
 
         assert digest_size >= 1
         self.digest_size = digest_size
@@ -72,10 +72,11 @@ class FileDict:
     def __setitem__(self, key, val):
         filepath = self._hash_key2filepath(key)
         _dic = self.__load(filepath)
+        if _dic.get(key, None) == val: return
         _dic[key] = val
         self.__dump(filepath, _dic)
         # auto_dump(_dic, filepath)
 
     def clear(self):
         shutil.rmtree(self.data_dir)
-        make_path(self.data_dir)
+        # make_path(self.data_dir)
