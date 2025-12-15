@@ -28,6 +28,18 @@ alias tmuxls="tmux ls"
 alias tmuxrename="tmux rename-session -t"
 
 # =====================================================
+# screen
+alias screenr="screen -r"
+alias screenk="screen -k"
+alias screenls="screen -ls"
+screenrename() {
+    OLD_NAME="$1"
+    NEW_NAME="$2"
+    screen -S "${OLD_NAME}" -X sessionname "${NEW_NAME}"
+}
+alias echosty="echo $STY"
+
+# =====================================================
 # git
 alias gitr="git remote"
 alias gitra="git remote add"

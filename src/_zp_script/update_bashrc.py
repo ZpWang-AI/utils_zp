@@ -34,14 +34,21 @@ def update_bashrc_():
     bashrc_path = home_dir / '.bashrc'
     with open(bashrc_path, 'r', encoding='utf8')as f:
         lines = f.readlines()
-    for line in lines:
+    
+    if not lines or lines[-1]!='\n': lines.append('\n')
+    linea = f'. {bashrc_zp_path}\n'
+    lineb = f'. {bashrc_zp_local_path}\n'
+    for p, line in enumerate(lines):
         if 'bashrc_zp.sh' in line:
-            print('bashrc_zp.sh is already in the ~/.bashrc file')
-            break
-    else:
-        with open(bashrc_path, 'a', encoding='utf8')as f:
-            f.write(f'\n. {bashrc_zp_path}\n')
-            f.write(f'. {bashrc_zp_local_path}\n')
+            lines[p] = linea; break
+    else: lines.append(linea)
+    for p, line in enumerate(lines):
+        if 'bashrc_zp.local.sh' in line:
+            lines[p] = lineb; break
+    else: lines.append(lineb)
+
+    with open(bashrc_path, 'w', encoding='utf8')as f:
+        f.writelines(lines)
         print('~/.bashrc is updated')
     
     print('=====')
