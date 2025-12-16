@@ -29,6 +29,7 @@ alias tmuxrename="tmux rename-session -t"
 
 # =====================================================
 # screen
+alias screens="screen -S"
 alias screenr="screen -r"
 alias screenk="screen -k"
 alias screenls="screen -ls"
