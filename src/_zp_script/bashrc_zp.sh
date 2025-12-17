@@ -29,11 +29,11 @@ alias tmuxrename="tmux rename-session -t"
 
 # =====================================================
 # screen
-alias screens="screen -S"
-alias screenr="screen -r"
-alias screenk="screen -k"
-alias screenls="screen -ls"
-screenrename() {
+alias scs="screen -S"
+alias scr="screen -r"
+alias sck="screen -k"
+alias scls="screen -ls"
+screname() {
     OLD_NAME="$1"
     NEW_NAME="$2"
     screen -S "${OLD_NAME}" -X sessionname "${NEW_NAME}"

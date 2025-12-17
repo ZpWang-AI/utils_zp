@@ -51,12 +51,9 @@ def listdir_full_path(dirpath, sort=True):
 
 def oswalk_full_path(dirpath, only_file=True) -> Iterable[path]:
     for dirpath, dirnames, filenames in os.walk(dirpath):
-        if only_file:
-            for p in filenames:
-                yield path(dirpath, p)
-        else:
-            for p in dirnames+filenames:
-                yield path(dirpath, p)
+        if not only_file:
+            for p in dirnames: yield path(dirpath, p)
+        for p in filenames: yield path(dirpath, p)
         
 
 USERHOMEDIR = path('~').expanduser()
