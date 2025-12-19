@@ -21,7 +21,12 @@ alias sourcebashrc="source ~/.bashrc"
 ## source ~/.bashrc
 
 # =====================================================
+# Stack Size
+ulimit -s 32768
+
+# =====================================================
 # tmux
+alias tmuxs="tmux new -s"
 alias tmuxa="tmux attach -t"
 alias tmuxk="tmux kill-session -t"
 alias tmuxls="tmux ls"

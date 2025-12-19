@@ -2,6 +2,7 @@ from ..core import *
 
 
 utf8 = 'utf-8'
+endl = '\n'
 
 
 class FileUtilsException(Exception):

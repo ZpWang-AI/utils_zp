@@ -80,42 +80,104 @@ class Video_custom:
     def edit_video(
         self, new_video_path,
         width, height, fps,
-        terminal_log=False, 
+        method:Literal['cv2','decord','ffmpeg']='cv2',
     ):
-        """
-        """
-        try:
-            import ffmpeg
-        except Exception as err:
-            print(err)
-            print('Dowload ffmpeg by:\nsudo apt-get install ffmpeg\npip install ffmpeg-python')
-            exit(0)
+        video_path = path(self.video_path); assert video_path.exists()
+        new_video_path = str(new_video_path); make_path(file_path=new_video_path)
+        fps = min(fps, self.fps)
 
-        video_path = path(self.video_path)
-        assert video_path.exists()
-        new_video_path = str(new_video_path)
-        make_path(file_path=new_video_path)
-        assert path(new_video_path).exists()
+        def _use_decord():
+            try:
+                from decord import VideoReader, cpu, gpu
+                import imageio
+            except Exception as err:
+                print(err)
+                print('Install the required libraries:\npip install decord imageio[ffmpeg]')
+                exit(0)
 
-        stream = ffmpeg.input(video_path)
-        stream = stream.filter('fps', fps=fps, round='up')
-        stream = stream.filter('scale', width, height)
-        if terminal_log:
-            stream = stream.output(new_video_path)
-        else:
-            # print(new_video_path)
-            stream = stream.output(
-                new_video_path, 
-                loglevel='error',
-            )
-        stream = stream.overwrite_output()
-        stream = stream.run()
-        # try:
-        #     stream.run()
-        # except ffmpeg.Error as e:
-        #     raise Exception('Error:', e.stderr.decode())
-        # ffmpeg.run(stream)
-        return
+            video_reader = VideoReader(str(video_path), width=width, height=height)
+            new_video_writer = imageio.get_writer(str(new_video_path), fps=fps)
+
+            time_source = 0
+            time_target = 0
+            gap_source = 1/self.fps
+            gap_target = 1/fps
+            for frame in video_reader:
+                if time_source >= time_target:
+                    time_target += gap_target
+                    # frame_np = frame.asnumpy()
+                    # frame_resized = cv2.resize(frame_np, (width, height))
+                    new_video_writer.append_data(frame.asnumpy())
+                time_source += gap_source
+
+            new_video_writer.close()
+        
+        def _use_ffmpeg():
+            try:
+                import ffmpeg
+            except Exception as err:
+                print(err)
+                print('Dowload ffmpeg by:\nsudo apt install ffmpeg\npip install ffmpeg-python')
+                exit(0)
+
+            cmd = [
+                'ffmpeg',
+                '-i', str(self.video_path),       # 输入文件
+                '-an',                       # 跳过音频 (no audio)
+                '-vf', f'fps={fps},scale={width}:{height}:flags=fast_bilinear',  # 设置帧率和缩放
+                '-c:v', 'mpeg4',  
+                '-preset', 'fast',     
+                '-y',
+
+                str(new_video_path)
+            ]
+            # 执行命令，丢弃不必要输出以提升性能
+            subprocess.run(cmd, capture_output=True, check=True)
+            return
+
+            stream = ffmpeg.input(video_path)
+            stream = stream.filter('fps', fps=fps, round='up')
+            stream = stream.filter('scale', width, height)
+            if terminal_log:
+                stream = stream.output(new_video_path)
+            else:
+                # print(new_video_path)
+                stream = stream.output(
+                    new_video_path, 
+                    loglevel='error',
+                )
+            stream = stream.overwrite_output()
+            stream = stream.run()
+        
+        def _use_cv2():
+            cap = cv2.VideoCapture(str(video_path))
+            fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+            writer = cv2.VideoWriter(new_video_path, fourcc, fps, (width, height))
+            
+            time_source, time_target = 0.0, 0.0
+            gap_source, gap_target = 1.0/self.fps, 1.0/fps
+            
+            while True:
+                ret, frame = cap.read()
+                if not ret:
+                    break
+                
+                if time_source >= time_target:
+                    time_target += gap_target
+                    frame_resized = cv2.resize(frame, (width, height))
+                    writer.write(frame_resized)
+                
+                time_source += gap_source
+            
+            # 释放资源
+            cap.release()
+            writer.release()
+            cv2.destroyAllWindows()
+
+        if method == 'cv2': _use_cv2()
+        elif method == 'decord': _use_decord()
+        elif method == 'ffmpeg': _use_ffmpeg()
+        else: raise Exception()
 
     def __getitem__(self, index, cap=None, rgb=True):
         "return PIL.Image or None"
