@@ -17,6 +17,7 @@ alias lsize="du -h -d 1 | sort -hr"
 alias ldisk="df -h | grep -v /run/user/"
 alias kkgpu="watch --color -n1 gpustat -cpu --color"
 alias sourcebashrc="source ~/.bashrc"
+alias sshkeygen="ssh-keygen -t rsa -b 4096 -C zhipangwang@gmail.com"
 
 ## source ~/.bashrc
 
