@@ -72,6 +72,7 @@ torch = LazyImport('torch')
 nn = LazyImport('torch.nn')
 transformers = LazyImport('transformers')
 plt = LazyImport('matplotlib.pyplot')
+cv2 = LazyImport('cv2')
 
 
 if 0:

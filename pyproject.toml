@@ -19,14 +19,9 @@ classifiers = [
 
 # -----
 [project.scripts]
-zp = "_zp_script:zp_cmd"
-bgpy = "_zp_script:bgpy_cmd"
-gitupdate = "_zp_script:gitupdate_cmd"
-killzp = "_zp_script:killzp_cmd"
-pszp = "_zp_script:pszp_cmd"
-show_bashrc = "_zp_script:show_bashrc_cmd"
-update_bashrc = "_zp_script:update_bashrc_cmd"
-zp_test = "_zp_script:zp_test_cmd"
+zp = "_project_script_zp:zp_cmd"
+gitupdate = "_project_script_zp:gitupdate_cmd"
+updatebashrc = "_project_script_zp:updatebashrc_cmd"
 # -----
 
 

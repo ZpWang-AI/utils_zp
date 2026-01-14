@@ -41,7 +41,9 @@ local/
 
 
 !/codebase
-!/inbox
 !/figs
+!/inbox
+!/project_script
+!/shell
 !/src
 

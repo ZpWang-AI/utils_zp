@@ -1,6 +1,5 @@
 from ..base import *
 
-cv2 = LazyImport('cv2')
 # ffmpeg = LazyImport('ffmpeg')
 # if 0:
 #     import cv2
