@@ -30,7 +30,7 @@ local/
 
 /*
 !/.gitignore
-!/dependence.drawio.png
+!/LICENSE
 !/pyproject.toml
 !/README.md
 !/requirements_all.txt
@@ -39,6 +39,9 @@ local/
 !/TODO.md
 !/VERSION
 
-# src
+
+!/codebase
+!/inbox
+!/figs
 !/src
 
