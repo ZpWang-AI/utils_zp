@@ -4,7 +4,7 @@ from .base import *
 def shut_down_autodl_server():
     os.system("/usr/bin/shutdown")
 
-def auto_shut_down_autodl_server(inactive_minutes):
+def auto_shut_down_autodl_server(inactive_minutes=30):
     """
     自动检测系统是否不活跃，并在满足条件时关闭服务器
     

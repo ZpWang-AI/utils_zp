@@ -20,6 +20,7 @@ from builtins import print as builtin_print
 from functools import wraps
 from dataclasses import dataclass, field
 from importlib import import_module
+from enum import Enum
 
 
 class LazyImport:
