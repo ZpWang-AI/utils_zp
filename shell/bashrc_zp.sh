@@ -62,3 +62,4 @@ alias mlxwl="mlx worker list"
 # =====================================================
 # hdfs
 alias hdfsd="hdfs dfs"
+alias hdfss="hdfs dfs"
