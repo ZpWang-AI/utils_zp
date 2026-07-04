@@ -1,6 +1,10 @@
 ## copy this sh file, use ". bashrc_zp.sh" to import it
 
-export PS1='\[\e[1;32m\][\u@\h \w]$ \[\e[0m\]'  # make the prompt string green
+# 缩短PS1提示符：
+# 1. 设置PROMPT_DIRTRIM=2，使路径只显示最后2级目录（例如 .../data/VQABenchmark）
+# 2. 使用 $(hostname | cut -d- -f1-2) 截取主机名前两部分，代替完整主机名
+export PROMPT_DIRTRIM=2
+export PS1='\[\e[1;32m\][\u@$(hostname | cut -d- -f1-2) \w]$ \[\e[0m\]'
 # add \[\e[XXX\] to change the font color
 
 export HF_ENDPOINT="https://hf-mirror.com"
