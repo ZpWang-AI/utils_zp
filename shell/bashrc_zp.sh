@@ -5,6 +5,7 @@
 # 2. 使用 $(hostname | cut -d- -f1-2) 截取主机名前两部分，代替完整主机名
 export PROMPT_DIRTRIM=2
 export PS1='\[\e[1;32m\][\u@$(hostname | cut -d- -f1-2) \w]$ \[\e[0m\]'
+# export PS1='\[\e[1;32m\][\u@\h \w]$ \[\e[0m\]'  # make the prompt string green
 # add \[\e[XXX\] to change the font color
 
 export HF_ENDPOINT="https://hf-mirror.com"
@@ -54,3 +55,16 @@ alias echosty="echo $STY"
 # git
 alias gitr="git remote"
 alias gitra="git remote add"
+
+
+# =====================================================
+# mlx
+alias mlxw="mlx worker"
+alias mlxwq="mlx worker quota"
+alias mlxwl="mlx worker list"
+
+
+# =====================================================
+# hdfs
+alias hdfsd="hdfs dfs"
+alias hdfss="hdfs dfs"
