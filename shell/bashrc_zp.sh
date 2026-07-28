@@ -57,9 +57,14 @@ alias gitra="git remote add"
 alias mlxw="mlx worker"
 alias mlxwq="mlx worker quota"
 alias mlxwl="mlx worker list"
+alias mlxlogin="mlx worker login"
+alias mlxwlogin="mlx worker login"
 
 
 # =====================================================
 # hdfs
 alias hdfsd="hdfs dfs"
 alias hdfss="hdfs dfs"
+alias hdfsput="hdfs dfs -put"
+alias hdfsget="hdfs dfs -get"
+alias hdfsls="hdfs dfs -ls"
