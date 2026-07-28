@@ -9,7 +9,7 @@
 - 开发 agent：负责开发功能、修复 issue、补充必要文档
 - code reviewer：负责审查改动、指出风险，并在需要时沉淀 issue。
   - 发现问题时，先提 issue，再等待用户指示；不要默认直接继续修改代码
-- 总结者：负责整理 git commit message、阶段总结和文档归纳。具体约定见：
+- 总结者：负责整理 git commit message、阶段总结和文档整理。具体约定见：
   `agent_zp/summarizer.agent.md`
 
 ## 用户级规则

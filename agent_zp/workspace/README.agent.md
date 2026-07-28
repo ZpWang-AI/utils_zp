@@ -1,6 +1,6 @@
 # Workspace Entry
 
-说明：这是 workspace 层级的总入口，负责承载跨 workspace 复用的通用协作约定。
+说明：这是 workspace 层级的总入口，负责承载跨 workspace 复用的通用协作约定，不索引具体 workspace entry。
 
 ## 通用约定
 
@@ -13,7 +13,7 @@
 ## 文档约定
 
 - **修改完具体代码后同步相关文档！**
-- repo 内总入口统一放在各自仓库的 `.agent/README.agent.md`
+- repo 内总入口统一放在各自仓库的 agent 入口文档，例如 `.agent/README.agent.md`
 - 正常开发相关的过程记录、协同状态和交接信息统一写在 repo 内 `.agent/PROGRESS.agent.md`
 - 正常开发相关的历史归档统一放在 repo 内 `.agent/progress_archive/`，按条目 `实现时间` 所属日期归档；文件名使用 `YYYY-MM-DD.md`
 - issue 和 TODO 统一写在 repo 内 `.agent/ISSUE.agent.md`
