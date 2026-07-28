@@ -1,0 +1,28 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "utils_zp"
+version = "2.0.0"
+description = "Utilities of zp"
+readme = "README.md"
+requires-python = ">=3.10"
+authors = [
+    { name = "Zhipang Wang", email = "zhipangwang@gmail.com" }
+]
+dependencies = [
+    "nvidia-ml-py",
+    "tqdm",
+]
+
+[project.scripts]
+zp = "utils_zp.cli.main:main"
+zpbashrc = "utils_zp.cli.zpbashrc:main"
+zpburn = "utils_zp.cli.zpburn:main"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]

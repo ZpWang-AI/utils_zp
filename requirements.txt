@@ -1,0 +1,3 @@
+# Runtime dependencies are defined in pyproject.toml.
+nvidia-ml-py
+tqdm
