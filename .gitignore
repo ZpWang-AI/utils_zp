@@ -39,11 +39,10 @@ local/
 !/TODO.md
 !/VERSION
 
-
 !/codebase
 !/figs
 !/inbox
 !/project_script
 !/shell
 !/src
-
+!/agent_zp
