@@ -1,0 +1,49 @@
+__pycache__
+.vscode
+.git
+.DS_Store
+nohup.out
+
+*backup*/
+*trash*/
+*log*/
+*tmp*/
+old/
+local/
+# *archive
+
+# *.sh
+# *.cmd
+# *.ipynb
+*.zip
+*.7z
+*.log
+# *test*
+~*
+*~
+*~.*
+*.old*
+*.local*
+*.egg-info
+
+# ==============================
+
+/*
+!/.gitignore
+!/LICENSE
+!/pyproject.toml
+!/README.md
+!/requirements_all.txt
+!/requirements.txt
+!/setup.py
+!/TODO.md
+!/VERSION
+
+
+!/codebase
+!/figs
+!/inbox
+!/project_script
+!/shell
+!/src
+
