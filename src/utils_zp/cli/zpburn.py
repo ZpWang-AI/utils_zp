@@ -33,6 +33,11 @@ def main(argv: list[str] | None = None) -> int:
             gpu_id=args.gpu_id,
             progress_callback=progress.update,
         )
+    except ModuleNotFoundError as exc:
+        if exc.name != "torch":
+            raise
+        print("zpburn requires torch. Please install torch in the current environment first.")
+        return 1
     except KeyboardInterrupt:
         print("\nStopped")
         return 130

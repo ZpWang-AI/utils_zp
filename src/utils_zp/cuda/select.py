@@ -62,6 +62,19 @@ def pick_gpu_indices(
         min_free_mb=min_free_mb,
         device_indices=device_indices,
     )
+    if len(available) < required_count:
+        requested_scope = (
+            "all visible GPUs"
+            if device_indices is None
+            else f"device_indices={list(device_indices)}"
+        )
+        raise ValueError(
+            "Not enough available GPUs: "
+            f"required_count={required_count}, "
+            f"available_count={len(available)}, "
+            f"min_free_mb={min_free_mb}, "
+            f"scope={requested_scope}"
+        )
     return [gpu.index for gpu in available[:required_count]]
 
 

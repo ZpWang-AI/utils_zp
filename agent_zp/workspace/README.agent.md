@@ -16,7 +16,8 @@
 - repo 内总入口统一放在各自仓库的 agent 入口文档，例如 `.agent/README.agent.md`
 - 正常开发相关的过程记录、协同状态和交接信息统一写在 repo 内 `.agent/PROGRESS.agent.md`
 - 正常开发相关的历史归档统一放在 repo 内 `.agent/progress_archive/`，按条目 `实现时间` 所属日期归档；文件名使用 `YYYY-MM-DD.md`
-- issue 和 TODO 统一写在 repo 内 `.agent/ISSUE.agent.md`
+- 代码相关的 issue、review 发现的问题和 repo 内待修事项，统一记录到对应 repo 自己的 `.agent/ISSUE.agent.md`
+- 如果不是某个具体 repo 的代码 issue，而是用户额外要求 agent 记一下的通用事项、协作提醒或跨 repo 待办，统一记录到 `utils_zp` 仓库下的 `.agent/ISSUE.agent.md`
 - issue 历史归档统一放在 repo 内 `.agent/issue_archive/`，按条目 `解决时间` 所属日期归档；文件名使用 `YYYY-MM-DD.md`
 - `progress` 和 `issue` 条目统一补 `标签：` 字段，格式为 `优先级=P0/P1/P2/P3；问题类型=...`
 - 已完成 issue 统一补 `解决时间：YYYY-MM-DD HH:MM:SS`；已完成 progress 统一补 `实现时间：YYYY-MM-DD HH:MM:SS`

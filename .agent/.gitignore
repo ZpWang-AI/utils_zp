@@ -1,0 +1,4 @@
+issue_archive/*
+!issue_archive/.gitkeep
+progress_archive/*
+!progress_archive/.gitkeep

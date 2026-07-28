@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import os
 import threading
 import time
 
@@ -21,6 +22,7 @@ class GPUMemoryOccupier:
         auto_start: bool = True,
     ) -> None:
         self.device_indices = device_indices or [0]
+        self._torch_devices: dict[int, str] = {}
 
         if leave_free_mb is not None:
             total_mem = get_gpu(self.device_indices[0]).total_mb
@@ -44,6 +46,10 @@ class GPUMemoryOccupier:
         if self._keep_occupying:
             return
 
+        self._torch_devices = {
+            device_index: _resolve_torch_device_for_physical_gpu(device_index)
+            for device_index in self.device_indices
+        }
         self._keep_occupying = True
         self._run_threads = [
             threading.Thread(target=self._spin, daemon=True, kwargs={"device_index": device_index})
@@ -65,6 +71,7 @@ class GPUMemoryOccupier:
         for thread in self._run_threads:
             thread.join()
         self._run_threads = []
+        self._torch_devices = {}
 
     def close(self) -> None:
         self.stop()
@@ -90,8 +97,10 @@ class GPUMemoryOccupier:
     def _occupy_one_gpu(self, *, device_index: int, tensor_stack: list[list]) -> None:
         import torch
 
+        torch_device = self._get_torch_device(device_index)
+
         def make_tensor(exp: int):
-            return torch.arange(1, 10**exp, device=f"cuda:{device_index}")
+            return torch.arange(1, 10**exp, device=torch_device)
 
         used_mb = get_gpu(device_index).used_mb
         for pid, (exp, buffer_mb) in enumerate(zip([7, 5], [80, 1])):
@@ -110,8 +119,39 @@ class GPUMemoryOccupier:
     def _spin(self, *, device_index: int) -> None:
         import torch
 
-        x = torch.eye(100, device=f"cuda:{device_index}")
+        x = torch.eye(100, device=self._get_torch_device(device_index))
         while self._keep_occupying and self.keep_busy:
             for _ in range(100):
                 x *= x
             time.sleep(0.001)
+
+    def _get_torch_device(self, device_index: int) -> str:
+        return self._torch_devices.get(device_index) or _resolve_torch_device_for_physical_gpu(
+            device_index
+        )
+
+
+def _resolve_torch_device_for_physical_gpu(device_index: int) -> str:
+    visible_devices = os.environ.get("CUDA_VISIBLE_DEVICES", "").strip()
+    if not visible_devices:
+        return f"cuda:{device_index}"
+
+    visible_tokens = [token.strip() for token in visible_devices.split(",") if token.strip()]
+    if not visible_tokens:
+        return f"cuda:{device_index}"
+
+    physical_device = str(device_index)
+    for logical_index, token in enumerate(visible_tokens):
+        if token.isdigit() and token == physical_device:
+            return f"cuda:{logical_index}"
+
+    physical_uuid = get_gpu(device_index).uuid
+    for logical_index, token in enumerate(visible_tokens):
+        # CUDA_VISIBLE_DEVICES may contain full UUIDs or unique UUID prefixes.
+        if physical_uuid == token or physical_uuid.startswith(token):
+            return f"cuda:{logical_index}"
+
+    raise RuntimeError(
+        f"Physical gpu_id={device_index} is not visible to torch under "
+        f"CUDA_VISIBLE_DEVICES={visible_devices!r}."
+    )

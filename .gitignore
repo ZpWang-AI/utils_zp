@@ -45,4 +45,6 @@ local/
 !/project_script
 !/shell
 !/src
+!/tests
 !/agent_zp
+!/.agent

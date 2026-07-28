@@ -39,6 +39,11 @@
 - 等待可用卡
 - 自动设置环境变量
 
+默认语义说明：
+
+- `pick_gpu_indices(wait=False)` 在可用 GPU 数量少于 `required_count` 时会直接抛出 `ValueError`，不会静默少返回几张卡
+- 如果希望等待到足量 GPU 可用，再改用 `wait=True`
+
 ### `monitor.py`
 
 负责后台记录显存变化。
@@ -58,6 +63,11 @@
 ### `occupy.py`
 
 负责把一张或多张卡占到目标显存附近。
+
+其中 `GPUMemoryOccupier(device_indices=...)` 里的编号统一按 **物理 GPU 编号**
+解释，也就是 `nvidia-smi` 看到的 index。模块内部会在真正创建 torch tensor
+时自动映射成 torch 可见的逻辑 device，这样即使设置了
+`CUDA_VISIBLE_DEVICES`，NVML 查询和 torch 分配也还是对同一张物理卡生效。
 
 常用接口：
 

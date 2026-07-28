@@ -14,6 +14,7 @@ def main() -> int:
         print(f"missing rules file: {RULES_PATH}")
         return 1
 
+    print(f'Agent Entry Path: {RULES_PATH}\n')
     print(RULES_PATH.read_text(encoding="utf-8"), end="")
     return 0
 
