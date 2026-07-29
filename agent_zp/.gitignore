@@ -1,3 +1,6 @@
 workspace/*
 !workspace/example
 !workspace/README.agent.md
+history/**
+!history/README.agent.md
+!history/archive/.gitkeep

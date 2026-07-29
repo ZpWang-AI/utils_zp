@@ -1,58 +1,44 @@
-# utils_zp (UZP)
+# utils_zp (简称 UZP)
 
-本文件用于帮助人或 agent 快速接手 `utils_zp`（下文简称 `UZP`）仓库：先找对入口，再按任务类型分流，最后进入对应模块和常用命令。
+说明：这里只放仓库级入口，负责导航、任务分流和少量硬约束；专题说明与背景继续下沉到 `.agent/doc/` 或代码目录文档。
 
-## 重要先读
+## 先看哪里
 
-- 工作区级 agent 注意事项：`/mnt/bn/motor-search2/wzp/repos/utils_zp/agent_zp/workspace/wzp/README.agent.md`
-- workspace 通用协作约定：`/mnt/bn/motor-search2/wzp/repos/utils_zp/agent_zp/workspace/README.agent.md`
-- 用户级通用 agent 规则：`/mnt/bn/motor-search2/wzp/repos/utils_zp/agent_zp/README.agent.md`
-- 总结者约定：`/mnt/bn/motor-search2/wzp/repos/utils_zp/agent_zp/summarizer.agent.md`
-- repo 内补充资料入口：`.agent/doc/README.agent.md`
-- 正常开发记录：`.agent/PROGRESS.agent.md`
-- issue 修复记录、待处理改进和已知限制：`.agent/ISSUE.agent.md`
-- 重复性事件追踪：`.agent/ROUTINE.agent.md`
-- 仓库命令入口：`README.md`、`pyproject.toml`
-- CLI 代码入口：`src/utils_zp/cli/`
-- CUDA 工具入口：`src/utils_zp/cuda/README.md`
-- shell 配置入口：`shell/bashrc_zp.sh`
+- 用户级规则：`../agent_zp/README.agent.md`
+- workspace 规则：`../agent_zp/workspace/README.agent.md`、`../agent_zp/workspace/wzp/README.agent.md`
+- 仓库协作主文档：`ISSUE.agent.md`、`PROGRESS.agent.md`、`JOBS.agent.md`
+- repo 内专题入口：`doc/README.agent.md`
+- 代码入口：`../src/utils_zp/cli/`、`../src/utils_zp/cuda/README.md`、`../shell/bashrc_zp.sh`
+- 安装与公开说明：`../README.md`、`../pyproject.toml`
 
 ## 任务分流
 
-1. 先按 `agent_zp/workspace/README.agent.md` 与 `agent_zp/workspace/wzp/README.agent.md` 理解通用协作规则、记录方式和环境边界
-2. 再判断是“正常开发”还是“修 issue”：正常开发看 `.agent/PROGRESS.agent.md`，修 issue 看 `.agent/ISSUE.agent.md`
-3. 最后按代码范围继续分流：CLI 相关基本在 `src/utils_zp/cli/`；GPU 工具相关基本在 `src/utils_zp/cuda/`；shell 初始化相关基本在 `shell/`
-4. 不要一上来全仓库乱搜，先按“规则入口 + 任务类型 + 目录入口”分流
-5. 如果用户要求“先记一下”某件事，但它不属于某个具体 repo 的代码 issue，而是通用协作提醒、跨 repo 待办或后续跟踪事项，统一补记到本仓 `.agent/ISSUE.agent.md`
+1. 先确认 workspace 规则、环境边界和记录方式。
+2. 再按任务类型分流：正常开发看 `PROGRESS.agent.md`，修 issue 看 `ISSUE.agent.md`，重复性工作先按用户级 `jobs` 分流，再看 `JOBS.agent.md` 中的本仓补充约定。
+3. 再按代码范围下钻：CLI 相关看 `../src/utils_zp/cli/`，GPU 工具相关看 `../src/utils_zp/cuda/`，shell 初始化相关看 `../shell/`。
+4. 跨 repo 的协作提醒、后续待办或不落在具体代码 issue 上的事项，统一补记到本仓 `ISSUE.agent.md`。
 
-## 项目概况
+## 仓库定位
 
-- `utils_zp` 当前定位是面向 agent / CLI 的轻量工具仓，优先提供简单直接的命令入口，而不是堆叠过多兼容层
-- 当前已落地的 CLI 包括：
-  - `zp`：展示包信息和命令列表
-  - `zpbashrc`：把共享 shell 配置接入用户 `~/.bashrc`
-  - `zpburn`：启动 GPU idle burn
-  - `zprules`：输出当前 agent 规则入口路径和内容
-- 当前已成型的代码模块主要有：
-  - `src/utils_zp/cli/`：CLI 入口与交互逻辑
-  - `src/utils_zp/cuda/`：GPU 查询、选卡、监控、占卡和压测工具
-  - `shell/`：共享 bashrc 脚本
-  - `agent_zp/`：用户级 / workspace 级 agent 规则
-- 当前仓库优先保持小而清晰：能写成单一职责脚本或简单模块时，不要过早引入复杂抽象
+- `utils_zp` 是面向 agent / CLI 的轻量工具仓，优先提供直接可用的命令入口。
+- 当前主要范围：CLI、CUDA 工具、共享 shell 配置，以及 `agent_zp/` 下的规则文档。
+- 设计上优先保持小而清晰；能写成单一职责脚本或简单模块时，不提前堆复杂抽象。
 
-## 主要目录
+## 硬约束
 
-- `src/utils_zp/cli/`：CLI 命令实现
-- `src/utils_zp/cuda/`：GPU 工具模块与说明文档
-- `shell/`：shell 初始化脚本
-- `agent_zp/`：用户级和 workspace 级 agent 规则入口
-- `.agent/`：repo 级协作入口、进展、issue 和 routine 记录
+- 仓库级入口优先做“导航 + 分流 + 硬约束”；专题背景、历史过程和实现细节不要重新堆回本文件。
+- 仓库内文档路径优先写相对路径，避免把绝对路径扩散到 repo 级入口。
+- 执行重要命令时，优先把 stdout / stderr 重定向到就近 `tmp/` 日志文件，再结合日志和实际产物核对结果，不只看 Terminal 输出。
+- 依赖 GPU 的压测、占卡和实验命令不要在当前环境直接执行；先整理命令、参数和预期产物，再放到对应 GPU 环境运行。
+- 默认示例优先给源码入口；如果涉及安装方式或 repo 相对资源约束，以 `../README.md` 中的 editable-only 说明为准。
+- 涉及飞书 doc/wiki 同步时，默认走已认证的 `lark-cli`；说明里聚焦认证、scope 和读写结果，不再引导到浏览器自动化前置检查。
 
-## 常用入口
+## 最小命令索引
 
 - 查看可用命令：`zp`
+- 打印当前用户级 jobs：`zpjobs`
 - 打印当前用户级规则：`zprules`
 - 安装共享 bashrc：`zpbashrc`
 - 启动 GPU idle burn：`zpburn <gpu_id>`
+- 模块化执行 jobs 打印：`python -m utils_zp.cli.zpjobs`
 - 模块化执行规则打印：`python -m utils_zp.cli.zprules`
-- 可编辑安装：`pip install -e .`

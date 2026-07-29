@@ -40,6 +40,15 @@ alias tmuxk="tmux kill-session -t"
 alias tmuxls="tmux ls"
 alias tmuxrename="tmux rename-session -t"
 
+_zpbashrc_init_tmux() {
+    if [ -n "${TMUX:-}" ] && command -v tmux >/dev/null 2>&1; then
+        # Avoid keeping exited panes on screen as "dead".
+        tmux set-window-option -g remain-on-exit off >/dev/null 2>&1
+    fi
+}
+_zpbashrc_init_tmux
+unset -f _zpbashrc_init_tmux
+
 # =====================================================
 # screen
 alias scs="screen -S"

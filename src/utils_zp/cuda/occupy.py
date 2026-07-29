@@ -23,12 +23,19 @@ class GPUMemoryOccupier:
     ) -> None:
         self.device_indices = device_indices or [0]
         self._torch_devices: dict[int, str] = {}
+        self._target_used_mb_by_device: dict[int, float] = {}
 
         if leave_free_mb is not None:
-            total_mem = get_gpu(self.device_indices[0]).total_mb
-            self.target_used_mb = float(total_mem - leave_free_mb)
+            self._target_used_mb_by_device = {
+                device_index: float(get_gpu(device_index).total_mb - leave_free_mb)
+                for device_index in self.device_indices
+            }
+            self.target_used_mb = self._target_used_mb_by_device[self.device_indices[0]]
         elif target_used_mb is not None:
             self.target_used_mb = float(target_used_mb)
+            self._target_used_mb_by_device = {
+                device_index: self.target_used_mb for device_index in self.device_indices
+            }
         else:
             raise ValueError("either target_used_mb or leave_free_mb must be provided")
 
@@ -98,6 +105,7 @@ class GPUMemoryOccupier:
         import torch
 
         torch_device = self._get_torch_device(device_index)
+        target_used_mb = self._get_target_used_mb(device_index)
 
         def make_tensor(exp: int):
             return torch.arange(1, 10**exp, device=torch_device)
@@ -105,14 +113,14 @@ class GPUMemoryOccupier:
         used_mb = get_gpu(device_index).used_mb
         for pid, (exp, buffer_mb) in enumerate(zip([7, 5], [80, 1])):
             try:
-                while used_mb < self.target_used_mb - buffer_mb:
+                while used_mb < target_used_mb - buffer_mb:
                     tensor_stack[pid].append(make_tensor(exp))
                     used_mb = get_gpu(device_index).used_mb
             except torch.cuda.OutOfMemoryError:
                 pass
 
         for pid in range(len(tensor_stack)):
-            while tensor_stack[pid] and get_gpu(device_index).used_mb >= self.target_used_mb:
+            while tensor_stack[pid] and get_gpu(device_index).used_mb >= target_used_mb:
                 tensor_stack[pid].pop()
                 torch.cuda.empty_cache()
 
@@ -129,6 +137,9 @@ class GPUMemoryOccupier:
         return self._torch_devices.get(device_index) or _resolve_torch_device_for_physical_gpu(
             device_index
         )
+
+    def _get_target_used_mb(self, device_index: int) -> float:
+        return self._target_used_mb_by_device[device_index]
 
 
 def _resolve_torch_device_for_physical_gpu(device_index: int) -> str:

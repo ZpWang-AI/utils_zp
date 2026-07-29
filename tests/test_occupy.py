@@ -39,6 +39,23 @@ class _FakeTorch:
 
 
 class OccupyTests(unittest.TestCase):
+    def test_leave_free_mb_builds_target_per_device(self) -> None:
+        fake_gpus = {
+            3: make_gpu(3, total_mb=24000),
+            7: make_gpu(7, total_mb=48000),
+        }
+
+        with mock.patch.object(occupy, "get_gpu", side_effect=lambda index: fake_gpus[index]):
+            occupier = occupy.GPUMemoryOccupier(
+                leave_free_mb=2000,
+                device_indices=[3, 7],
+                auto_start=False,
+            )
+
+        self.assertEqual(occupier.target_used_mb, 22000.0)
+        self.assertEqual(occupier._get_target_used_mb(3), 22000.0)
+        self.assertEqual(occupier._get_target_used_mb(7), 46000.0)
+
     def test_resolve_torch_device_maps_visible_physical_index_to_logical_index(self) -> None:
         with mock.patch.dict(os.environ, {"CUDA_VISIBLE_DEVICES": "3,7,9"}, clear=False):
             device = occupy._resolve_torch_device_for_physical_gpu(7)

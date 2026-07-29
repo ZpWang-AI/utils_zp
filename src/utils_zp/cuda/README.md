@@ -54,6 +54,11 @@
 - `load_monitor_log()`
 - `plot_monitor_log()`
 
+附加说明：
+
+- `plot_monitor_log()` 画图时需要当前环境额外安装 `matplotlib`
+- 如果环境里没有 `matplotlib`，函数会直接报明确错误提示
+
 适合做：
 
 - 训练过程监控
@@ -149,6 +154,11 @@ from utils_zp.cuda.idle_burn import stress_gpu_to_target_usage
 ## 环境说明
 
 当前实现默认依赖 NVIDIA 驱动和 NVML 运行时。
+
+附加依赖说明：
+
+- `plot_monitor_log()` 需要 `matplotlib`
+- `idle_burn.py` / `zpburn` 运行时需要 `torch`
 
 如果机器上的 `libnvidia-ml` 不可用，`query.py` 相关接口会报：
 

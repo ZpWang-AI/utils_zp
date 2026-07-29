@@ -95,7 +95,15 @@ def load_monitor_log(log_path: str | Path) -> list[dict[str, Any]]:
 
 
 def plot_monitor_log(log_path: str | Path, output_path: str | Path) -> None:
-    import matplotlib.pyplot as plt
+    try:
+        import matplotlib.pyplot as plt
+    except ModuleNotFoundError as exc:
+        if exc.name not in {"matplotlib", "matplotlib.pyplot"}:
+            raise
+        raise RuntimeError(
+            "plot_monitor_log requires matplotlib. Please install matplotlib in the "
+            "current environment first."
+        ) from exc
 
     records = load_monitor_log(log_path)
     if not records:

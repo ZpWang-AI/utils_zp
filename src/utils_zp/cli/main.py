@@ -7,6 +7,7 @@ def main() -> int:
     print("commands:")
     print("  zpbashrc")
     print("  zpburn")
+    print("  zpjobs")
     print("  zprules")
     return 0
 

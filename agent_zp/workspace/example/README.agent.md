@@ -1,8 +1,8 @@
 # Example Workspace Entry
 
-说明：这是示例用的 workspace 入口文档，用来演示具体 workspace 文档该怎么写；不是实际在用的 workspace。
+说明：示例 workspace 只演示结构，不代表真实环境。
 
-## 当前进行中的 Repo
+## 建议结构
 
 - `example` (`ex`)
   入口：`~/example/.agent/README.agent.md`
