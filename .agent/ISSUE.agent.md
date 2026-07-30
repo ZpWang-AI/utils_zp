@@ -22,35 +22,11 @@
 ## 当前上下文
 
 - 当前已创建 issue 记录文档，后续 issue 可直接追加到本文件
-- 已根据用户要求将 `1` 到 `5` 号已完成 issue 按 `解决时间` 所属日期归档到 `.agent/issue_archive/2026-07-28.md`，并将 `8` 到 `9` 号已完成 issue 归档到 `.agent/issue_archive/2026-07-29.md`
+- 已根据用户要求将 `1` 到 `5` 号已完成 issue 按 `解决时间` 所属日期归档到 `.agent/issue_archive/2026-07-28.md`，并将 `6` 到 `10` 号已完成 issue 归档到 `.agent/issue_archive/2026-07-29.md`
 - 由于仓库可能存在多 agent 协同修改，issue 结论需要注意对应的代码状态和文档状态是否一致
 - 当前已使用过的最新 TODO 序号是 `12`；主文档剩余事项中的最大序号是 `12`；后续新增 issue 统一从 `13` 开始顺延编号，并继续遵守“已归档和剩余 TODO 均不重排”的规则
 
 ## TODO
-
-6. 缺少对 `.agent/ISSUE.agent.md` / `.agent/PROGRESS.agent.md` 的机械校验脚本（已关闭）
-标签：`优先级=P2；问题类型=流程规范`
-问题：当前 `utils_zp` 已经把 repo 级协作记录沉淀到 `.agent/ISSUE.agent.md` 与 `.agent/PROGRESS.agent.md`，但还没有一套稳定的机械校验脚本去检查这些文档是否满足基础约束，例如编号是否连续/不回退、状态标记是否合法、必填字段是否齐全、`解决时间` / `实现时间` 格式是否正确、主文档里是否残留应归档的已完成条目等。现在这些检查主要靠人工阅读或临时 `rg`，一旦口径漂移、字段漏写或归档后主文档没清干净，就很容易在后续协作里静默积累。
-代码：`.agent/ISSUE.agent.md`、`.agent/PROGRESS.agent.md`、`src/utils_zp/cli/`、`tests/`
-建议方案：1. 在 `utils_zp` 内补一个可直接运行的机械校验脚本，至少覆盖 issue/progress 两类主文档的编号、状态、必填字段和时间格式检查。2. 把“主文档不应残留可归档已完成条目”“归档文件名需和条目日期一致”这类容易漏的规则也纳入校验。3. 补最小回归测试或样例输入，确保后续改规则或改文档结构时，校验脚本本身也有保护网。
-解决时间：2026-07-29 15:41:38
-解决方案：按用户要求直接关闭，不在当前阶段实现机械校验脚本；后续如果再次出现明确痛点或需要批量校验 `.agent` 文档，再重新开 issue 评估实现。
-
-7. 飞书文档自动写入链路缺少可用性前置检查与降级提示（已完成）
-标签：`优先级=P2；问题类型=可运行性`
-问题：当前通过浏览器自动化去修改飞书文档时，如果本地 Chrome 进程未启动、浏览器扩展未连接，任务会在真正打开页面时才失败，常见报错是 `chrome process not detected` 或 `Failed to connect to the TRAE Chrome extension`。这会让“已经开始写飞书”与“实际没有任何写入”之间出现落差，也缺少统一的前置自检和可执行的降级提示。本次受影响的目标文档是 `https://dcar.feishu.cn/wiki/HfjFw9Ngci8QAvkxf3pcQHk3nZb`，原本计划补入但未成功写入的显著性/重采样概括为：`我们基于当前测试集进行多次重采样，并在每次采样后重新计算评价指标和模型间差值，以检验结果在不同采样下是否稳定，从而判断结论是否具有统计可靠性。`
-代码：`browser_use` 链路（外部依赖）、`src/utils_zp/cli/zpbrowsercheck.py`、`tests/test_zpbrowsercheck.py`、`README.md`、相关 agent 工作流文档
-建议方案：1. 为浏览器写入类任务补一套前置检查清单，至少覆盖 Chrome 进程、扩展连接状态和可用标签页。2. 在无法连接时统一输出明确提示，直接告诉使用者需要先启动 Chrome / 启用扩展，而不是等到执行中途才暴露。3. 如果后续 `utils_zp` 承担这类工作流入口，可考虑补一个轻量 CLI 或文档化检查命令，减少重复踩坑。
-解决时间：2026-07-29 15:46:45
-解决方案：新增 `zpbrowsercheck` 轻量 CLI，先对本地浏览器自动化前置条件做机械检查：是否存在 Chrome 兼容可执行文件、是否存在本地浏览器 profile、是否已有 Chrome 兼容进程在运行；当浏览器未启动时直接返回失败，并明确提示“Nothing has been written to Feishu yet.” 以及后续操作步骤。对于当前仓库无法可靠自动确认的 TRAE Chrome extension 连接状态，命令统一输出显式 warning，要求在真正写飞书前人工确认扩展已连接。同步补充 `tests/test_zpbrowsercheck.py`，并在 `README.md`、`.agent/README.agent.md`、`agent_zp/README.agent.md` 中加入该前置检查命令和失败时必须明确说明“没写成”的使用规则。
-
-10. 飞书同步入口分叉到浏览器链路，和 `lark-cli` 主流程重复（已完成）
-标签：`优先级=P2；问题类型=流程规范`
-问题：基于 2026-07-29 当前仓库状态，飞书文档同步同时存在两套思路：一套是新增的浏览器自动化 + `zpbrowsercheck` 前置检查，另一套是已经可用、且当前环境已完成用户授权的 `lark-cli` 文档写入链路。前者依赖本地 Chrome、profile 和扩展连接，环境前置条件重、稳定性差，还把 `README.md`、`.agent/README.agent.md`、`agent_zp/README.agent.md` 等入口都带进了浏览器特有约束；后者已经能直接读写 doc/wiki，并且更贴合当前仓库“源码直跑、CLI 入口简洁”的长期方向。两套入口并存会让后续 agent 难以判断应该走哪条链路，也会继续维护一套并非主路径的测试与文档口径。
-代码：`src/utils_zp/cli/zpbrowsercheck.py`、`tests/test_zpbrowsercheck.py`、`src/utils_zp/cli/main.py`、`pyproject.toml`、`README.md`、`.agent/README.agent.md`、`agent_zp/README.agent.md`、以及涉及浏览器自动化前置检查的相关说明
-建议方案：1. 删除 `zpbrowsercheck` CLI、对应测试和 CLI 暴露入口，收口飞书写入能力到 `lark-cli`。2. 把所有“写飞书前先跑 `zpbrowsercheck` / 检查浏览器扩展”的说明改成 `lark-cli` 的认证、scope 和写文档工作流说明，只保留一套入口。3. 回头核对现有涉及飞书同步的 jobs、README 和 agent 文档，确保后续默认都是用 `lark-cli` 同步 doc/wiki，不再提浏览器自动化链路。
-解决时间：2026-07-29 18:06:03
-解决方案：删除 `zpbrowsercheck` CLI 实现、脚本入口和对应单测，收口 `zp` 命令清单与打包入口；同步改写 `README.md`、`.agent/README.agent.md`、`agent_zp/README.agent.md` 的飞书相关说明，统一为“默认使用已认证的 `lark-cli` 处理 doc/wiki 读写”，不再维护浏览器自动化前置检查这条仓库主路径。
 
 11. 线上实验开通流程未沉淀，`XLM-R 12层` 与 `Qwen 0.6B` 线上效果尚未完成验证（待处理）
 标签：`优先级=P0；问题类型=流程规范`
