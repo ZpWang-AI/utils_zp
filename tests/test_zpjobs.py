@@ -47,6 +47,46 @@ class ZPJobsCLITests(unittest.TestCase):
             f"Jobs Entry Path: {jobs_path}\n\n# demo jobs\n## 1. sample\n",
         )
 
+    def test_main_prints_selected_job_section_when_number_is_provided(self) -> None:
+        with TemporaryDirectory() as tmp_dir:
+            jobs_path = Path(tmp_dir) / "jobs.agent.md"
+            jobs_path.write_text(
+                "# demo jobs\n"
+                "## 1. sample\n"
+                "\n"
+                "- first detail\n"
+                "\n"
+                "## 2. another job\n"
+                "\n"
+                "- second detail\n",
+                encoding="utf-8",
+            )
+
+            with mock.patch.object(zpjobs, "JOBS_PATH", jobs_path):
+                stdout = io.StringIO()
+                with redirect_stdout(stdout):
+                    exit_code = zpjobs.main(["2"])
+
+        self.assertEqual(exit_code, 0)
+        self.assertEqual(
+            stdout.getvalue(),
+            "如果用户输出 zpjobs+数字，表示要agent执行对应任务。\n\n"
+            "## 2. another job\n\n- second detail\n",
+        )
+
+    def test_main_reports_unknown_job_number(self) -> None:
+        with TemporaryDirectory() as tmp_dir:
+            jobs_path = Path(tmp_dir) / "jobs.agent.md"
+            jobs_path.write_text("# demo jobs\n## 1. sample\n", encoding="utf-8")
+
+            with mock.patch.object(zpjobs, "JOBS_PATH", jobs_path):
+                stdout = io.StringIO()
+                with redirect_stdout(stdout):
+                    exit_code = zpjobs.main(["9"])
+
+        self.assertEqual(exit_code, 1)
+        self.assertEqual(stdout.getvalue(), "unknown job number: 9\n")
+
     def test_main_reports_missing_jobs_file(self) -> None:
         missing_path = Path("/tmp/utils_zp_missing_jobs.md")
 

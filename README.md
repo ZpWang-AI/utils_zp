@@ -9,7 +9,10 @@ Current CLI commands:
 - `zp`: show package name, version, and available commands
 - `zpbashrc`: install shared bashrc hooks into `~/.bashrc`, including shared tmux shell defaults
 - `zpburn`: start GPU idle burn on a physical GPU, requires `torch`
-- `zpjobs`: show a concise list of agent jobs; use `zpjobs --full` to print the full document
+- `zpdata`: show marked datasets from `data/dataset_versions.md`; use `zpdata 7` to print one dataset detail
+- `zpexp`: show marked experiments from `exp/exp_versions.md`; use `zpexp 4` to print one experiment detail
+- `zpjobs`: show a concise list of agent jobs; use `zpjobs 4` to print one job section, or `zpjobs --full` for the full document
+- `zppremodel` / `zppremodels`: show marked pretrained models from `pretrained_models/model_versions.md`; use `zppremodel 3` to print one model detail
 - `zprules`: print the full path of `agent_zp/README.agent.md`, then print its content
 
 Optional runtime dependencies:
@@ -42,6 +45,18 @@ zp
 
 # print current user agent jobs
 zpjobs
+
+# print one dataset detail
+zpdata 7
+
+# print one experiment detail
+zpexp 4
+
+# print one job and its description
+zpjobs 4
+
+# print one pretrained model detail
+zppremodels 3
 
 # print the full jobs document when needed
 zpjobs --full

@@ -20,7 +20,11 @@ dependencies = [
 zp = "utils_zp.cli.main:main"
 zpbashrc = "utils_zp.cli.zpbashrc:main"
 zpburn = "utils_zp.cli.zpburn:main"
+zpdata = "utils_zp.cli.zpdata:main"
+zpexp = "utils_zp.cli.zpexp:main"
 zpjobs = "utils_zp.cli.zpjobs:main"
+zppremodel = "utils_zp.cli.zppremodel:main"
+zppremodels = "utils_zp.cli.zppremodel:main"
 zprules = "utils_zp.cli.zprules:main"
 
 [tool.setuptools]

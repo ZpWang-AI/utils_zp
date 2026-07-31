@@ -1,6 +1,7 @@
 # ZP Agent Entry
 
-说明：这里只放用户级总入口，负责导航、分流和少量硬约束；workspace 细节看 `agent_zp/workspace/`，repo 细节看各仓库自己的 `.agent/README.agent.md`
+**请先运行 `zp` 命令，查看当前支持的 cli。**
+说明：这里只放用户级总入口，负责导航、分流和少量硬约束；workspace 细节看 `agent_zp/workspace/`，repo 细节看各仓库自己的 `.agent/README.agent.md`。
 
 ## 角色分工
 
