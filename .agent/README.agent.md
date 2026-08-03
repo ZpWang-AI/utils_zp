@@ -38,6 +38,7 @@
 - 查看可用命令：`zp`
 - 打印当前用户级 jobs：`zpjobs`
 - 打印当前用户级规则：`zprules`
+- 打印当前支持的 checkpoint：`zpckpt`
 - 安装共享 bashrc：`zpbashrc`
 - 启动 GPU idle burn：`zpburn <gpu_id>`
 - 模块化执行 jobs 打印：`python -m utils_zp.cli.zpjobs`

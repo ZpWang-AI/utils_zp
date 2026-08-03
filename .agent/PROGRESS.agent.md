@@ -29,3 +29,20 @@
 
 ## 当前进展
 
+8. 新增 `zpckpt` 命令（已完成）
+标签：优先级=P1；问题类型=功能开发
+说明：新增 `zpckpt` CLI，用固定注册表打印当前支持的 checkpoint，并补充入口、测试和 README 说明；当前收敛了 `线上模型` 与 `Qwen3.5 teacher` 两个 checkpoint。
+涉及文件：`src/utils_zp/cli/zpckpt.py`、`src/utils_zp/setting.py`、`src/utils_zp/cli/main.py`、`pyproject.toml`、`tests/test_zpckpt.py`、`tests/test_main.py`、`README.md`
+实现时间：2026-07-31 15:48:07
+
+9. 将 `zpckpt` / `zpdata` / `zpexp` / `zppremodel` 索引切到 YAML（已完成）
+标签：优先级=P1；问题类型=功能开发
+说明：为四个 CLI 新增统一 YAML 索引读取逻辑，把原先 Markdown 里的详细说明并入 `detail_markdown` 字段，同时把真实索引文件迁移为 `checkpoint_versions.yaml`、`dataset_versions.yaml`、`exp_versions.yaml`、`model_versions.yaml`。
+涉及文件：`src/utils_zp/cli/_yaml_index.py`、`src/utils_zp/cli/zpckpt.py`、`src/utils_zp/cli/zpdata.py`、`src/utils_zp/cli/zpexp.py`、`src/utils_zp/cli/zppremodel.py`、`src/utils_zp/setting.py`、`tests/test_zpckpt.py`、`tests/test_zpdata.py`、`tests/test_zpexp.py`、`tests/test_zppremodel.py`、`tests/test_main.py`、`README.md`、`pyproject.toml`、`/mnt/bn/motor-search2/wzp/repos/motor_search_relevance/model/checkpoint_versions.yaml`、`/mnt/bn/motor-search2/wzp/repos/motor_search_relevance/data/dataset_versions.yaml`、`/mnt/bn/motor-search2/wzp/repos/motor_search_relevance/exp/exp_versions.yaml`、`/mnt/bn/motor-search2/wzp/pretrained_models/model_versions.yaml`
+实现时间：2026-07-31 16:25:00
+
+10. 统一 versions YAML 结构与 CLI 输出口径（已完成）
+标签：优先级=P1；问题类型=功能开发
+说明：四个命令的索引列表统一改为 `versions`，`id` 全部按无前导零数字口径处理，所有记录补齐相对 `target_path`，`zpckpt` 对齐 `zppremodel` 的 `参数量 + 简要说明` 输出，并为四个命令都增加了 `--full`。
+涉及文件：`src/utils_zp/cli/_yaml_index.py`、`src/utils_zp/cli/zpckpt.py`、`src/utils_zp/cli/zpdata.py`、`src/utils_zp/cli/zpexp.py`、`src/utils_zp/cli/zppremodel.py`、`tests/test_zpckpt.py`、`tests/test_zpdata.py`、`tests/test_zpexp.py`、`tests/test_zppremodel.py`、`README.md`、`/mnt/bn/motor-search2/wzp/repos/motor_search_relevance/model/checkpoint_versions.yaml`、`/mnt/bn/motor-search2/wzp/repos/motor_search_relevance/data/dataset_versions.yaml`、`/mnt/bn/motor-search2/wzp/repos/motor_search_relevance/exp/exp_versions.yaml`、`/mnt/bn/motor-search2/wzp/pretrained_models/model_versions.yaml`
+实现时间：2026-07-31 16:40:00

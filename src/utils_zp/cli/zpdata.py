@@ -7,10 +7,14 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from .. import setting
-from ._numbered_sections import extract_numbered_section
-
-
-TABLE_HEADER = "| ID | 版本名 |"
+from ._yaml_index import (
+    get_detail_markdown,
+    get_target_path,
+    is_marked,
+    load_yaml_items,
+    normalize_version_id,
+    set_mark_status,
+)
 
 
 @dataclass(frozen=True)
@@ -19,40 +23,20 @@ class DatasetInfo:
     name: str
     size: str
     summary: str
+    target_path: str
 
 
-def _strip_cell(text: str) -> str:
-    return text.strip().strip("`")
-
-
-def collect_datasets(index_path: Path) -> list[DatasetInfo]:
-    lines = index_path.read_text(encoding="utf-8").splitlines()
-
-    start_index: int | None = None
-    for index, line in enumerate(lines):
-        if TABLE_HEADER in line:
-            start_index = index + 2
-            break
-
-    if start_index is None:
-        raise ValueError(f"missing dataset table: {index_path}")
-
+def _read_datasets(index_path: Path, *, only_marked: bool = True) -> list[DatasetInfo]:
     datasets: list[DatasetInfo] = []
-    for line in lines[start_index:]:
-        stripped = line.strip()
-        if not stripped.startswith("|"):
-            break
-
-        cells = [cell.strip() for cell in stripped.split("|")[1:-1]]
-        if len(cells) < 5:
+    for item in load_yaml_items(index_path):
+        dataset_id = normalize_version_id(item.get("id", ""))
+        name = str(item.get("name", "")).strip()
+        size = str(item.get("size", "")).strip()
+        summary = str(item.get("summary", "")).strip()
+        target_path = get_target_path(item)
+        if not dataset_id or not name or not size or not summary or not target_path:
             continue
-
-        dataset_id = _strip_cell(cells[0])
-        name = _strip_cell(cells[1])
-        size = _strip_cell(cells[2])
-        summary = _strip_cell(cells[3])
-        mark = _strip_cell(cells[4])
-        if not dataset_id or not name or not size or not summary or mark != "是":
+        if only_marked and not is_marked(item):
             continue
 
         datasets.append(
@@ -61,22 +45,47 @@ def collect_datasets(index_path: Path) -> list[DatasetInfo]:
                 name=name,
                 size=size,
                 summary=summary,
+                target_path=target_path,
             )
         )
 
     return datasets
 
 
+def collect_datasets(index_path: Path) -> list[DatasetInfo]:
+    return _read_datasets(index_path)
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="zpdata",
-        description="Show marked datasets from data/dataset_versions.md.",
+        description="Show marked datasets from data/dataset_versions.yaml.",
     )
     parser.add_argument(
         "dataset_number",
         nargs="?",
         type=int,
         help="Print the selected dataset detail by number, for example: zpdata 7",
+    )
+    parser.add_argument(
+        "--full",
+        action="store_true",
+        help="List all datasets, including unmarked ones.",
+    )
+    mark_group = parser.add_mutually_exclusive_group()
+    mark_group.add_argument(
+        "-m",
+        "--mark",
+        dest="mark_number",
+        type=int,
+        help="Mark the selected dataset by id, for example: zpdata -m 7",
+    )
+    mark_group.add_argument(
+        "-um",
+        "--unmark",
+        dest="unmark_number",
+        type=int,
+        help="Unmark the selected dataset by id, for example: zpdata -um 7",
     )
     return parser
 
@@ -96,9 +105,26 @@ def main(argv: list[str] | None = None) -> int:
         print(f"missing dataset versions file: {index_path}")
         return 1
 
-    content = index_path.read_text(encoding="utf-8")
-    datasets = collect_datasets(index_path)
+    if args.mark_number is not None:
+        try:
+            item = set_mark_status(index_path, args.mark_number, True)
+        except ValueError:
+            print(f"unknown dataset number: {args.mark_number}")
+            return 1
+        print(f"marked dataset {normalize_version_id(item.get('id', ''))}: {item.get('name', '')}")
+        return 0
+
+    if args.unmark_number is not None:
+        try:
+            item = set_mark_status(index_path, args.unmark_number, False)
+        except ValueError:
+            print(f"unknown dataset number: {args.unmark_number}")
+            return 1
+        print(f"unmarked dataset {normalize_version_id(item.get('id', ''))}: {item.get('name', '')}")
+        return 0
+
     if args.dataset_number is not None:
+        datasets = _read_datasets(index_path, only_marked=False)
         dataset = _find_dataset(datasets, args.dataset_number)
         if dataset is None:
             print(f"unknown dataset number: {args.dataset_number}")
@@ -110,13 +136,19 @@ def main(argv: list[str] | None = None) -> int:
         print(f"名称: {dataset.name}")
         print(f"数据量: {dataset.size}")
         print(f"简要说明: {dataset.summary}")
+        print(f"目标路径: {dataset.target_path}")
 
-        detail_section = extract_numbered_section(content, args.dataset_number)
+        detail_section = None
+        for item in load_yaml_items(index_path):
+            if normalize_version_id(item.get("id", "")) == dataset.dataset_id:
+                detail_section = get_detail_markdown(item)
+                break
         if detail_section is not None:
             print()
             print(detail_section, end="")
         return 0
 
+    datasets = _read_datasets(index_path, only_marked=not args.full)
     print(f"Target dataset versions path: {index_path}")
     print("id | 名称 | 数据量 | 简要说明")
     for dataset in datasets:
