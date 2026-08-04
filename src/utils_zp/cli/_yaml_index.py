@@ -2,6 +2,7 @@ from __future__ import annotations
 
 """Helpers for reading structured YAML index files used by CLI commands."""
 
+import json
 from pathlib import Path
 from typing import Any
 
@@ -24,8 +25,33 @@ def _str_presenter(dumper: _YamlDumper, data: str) -> yaml.ScalarNode:
 _YamlDumper.add_representer(str, _str_presenter)
 
 
+def _quote_markdown_plain_scalars(text: str) -> str:
+    repaired_lines: list[str] = []
+    for line in text.splitlines():
+        if ": `" not in line:
+            repaired_lines.append(line)
+            continue
+
+        prefix, value = line.split(":", 1)
+        stripped_value = value.lstrip()
+        if not stripped_value.startswith("`"):
+            repaired_lines.append(line)
+            continue
+
+        leading_spaces = value[: len(value) - len(stripped_value)]
+        repaired_lines.append(f"{prefix}: {leading_spaces}{json.dumps(stripped_value, ensure_ascii=False)}")
+    return "\n".join(repaired_lines)
+
+
 def load_yaml_document(index_path: Path) -> dict[str, Any]:
-    document = yaml.safe_load(index_path.read_text(encoding="utf-8"))
+    raw_text = index_path.read_text(encoding="utf-8")
+    try:
+        document = yaml.safe_load(raw_text)
+    except yaml.YAMLError as error:
+        repaired_text = _quote_markdown_plain_scalars(raw_text)
+        if repaired_text == raw_text:
+            raise error
+        document = yaml.safe_load(repaired_text)
     if not isinstance(document, dict):
         raise ValueError(f"invalid yaml document: {index_path}")
     return document

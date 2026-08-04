@@ -4,3 +4,4 @@ workspace/*
 history/**
 !history/README.agent.md
 !history/archive/.gitkeep
+.feishu_link.agent.yaml

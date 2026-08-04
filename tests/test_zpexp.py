@@ -279,6 +279,37 @@ class ZPExpCLITests(unittest.TestCase):
             "2 | T2 | 1/1 | hidden | baz\n",
         )
 
+    def test_main_accepts_summary_starting_with_markdown_backticks(self) -> None:
+        with TemporaryDirectory() as tmp_dir:
+            exp_root = Path(tmp_dir) / "exp"
+            exp_root.mkdir()
+            versions_path = exp_root / "exp_versions.yaml"
+            versions_path.write_text(
+                "title: demo\n"
+                "versions:\n"
+                "  - id: 7\n"
+                "    name: data6 蒸馏消融\n"
+                "    importance: T1\n"
+                "    progress: 5／7\n"
+                "    summary: `zpdata 10` softlabel 已生成完成；当前已完成 teacher\n"
+                "    target_path: exp/07-data6-distill_ablation/\n"
+                "    marked: true\n",
+                encoding="utf-8",
+            )
+
+            with mock.patch.object(setting, "TARGET_EXP_PATH", exp_root):
+                stdout = io.StringIO()
+                with redirect_stdout(stdout):
+                    exit_code = zpexp.main([])
+
+        self.assertEqual(exit_code, 0)
+        self.assertEqual(
+            stdout.getvalue(),
+            f"Target exp versions path: {versions_path}\n"
+            "id | 重要性 | 进度 | 名称 | 简要说明\n"
+            "7 | T1 | 5/7 | data6 蒸馏消融 | `zpdata 10` softlabel 已生成完成；当前已完成 teacher\n",
+        )
+
     def test_main_marks_experiment_when_requested(self) -> None:
         with TemporaryDirectory() as tmp_dir:
             exp_root = Path(tmp_dir) / "exp"

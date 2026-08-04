@@ -145,6 +145,9 @@ def main(argv: list[str] | None = None) -> int:
         detail_section = None
         for item in load_yaml_items(index_path):
             if normalize_version_id(item.get("id", "")) == model.model_id:
+                exact_parameter_count = item.get("parameter_count_exact")
+                if exact_parameter_count not in (None, ""):
+                    print(f"具体参数量: {exact_parameter_count}")
                 detail_section = get_detail_markdown(item)
                 break
         if detail_section is not None:
