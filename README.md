@@ -10,7 +10,7 @@ Current CLI commands:
 - `zpbashrc`: install shared bashrc hooks into `~/.bashrc`, including shared tmux shell defaults
 - `zpburn`: start GPU idle burn on a physical GPU, requires `torch`
 - `zpckpt`: show supported checkpoints from `model/checkpoint_versions.yaml`; use `zpckpt 2` to print one checkpoint detail, or `zpckpt --full` to list all checkpoints
-- `zpdata`: show marked datasets from `data/dataset_versions.yaml`; use `zpdata 7` to print one dataset detail, or `zpdata --full` to list all datasets
+- `zpdata`: show marked datasets from `data/dataset_versions.yaml`; use `zpdata 7` or `zpdata 11.1` to print one dataset detail, or `zpdata --full` to list all datasets
 - `zpexp`: show marked experiments from `exp/exp_versions.yaml`; use `zpexp 4` to print one experiment detail, or `zpexp --full` to list all experiments
 - `zpjobs`: show a concise list of agent jobs; use `zpjobs 4` to print one job section, or `zpjobs --full` for the full document
 - `zppremodel` / `zppremodels`: show marked pretrained models from `pretrained_models/model_versions.yaml`; use `zppremodel 3` to print one model detail, or `zppremodel --full` to list all models
@@ -55,6 +55,9 @@ zpckpt
 
 # print one dataset detail
 zpdata 7
+
+# print one derived dataset detail
+zpdata 11.1
 
 # print one experiment detail
 zpexp 4

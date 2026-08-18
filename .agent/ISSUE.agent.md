@@ -43,3 +43,11 @@
 建议方案：1. 在 `jobs` 体系里补一个“定时提醒” job，明确输入最少包括提醒时间、提醒内容、是否静默，以及默认优先使用哪类本机能力。2. 视仓库定位决定是否同步补一个轻量 CLI，例如统一封装 `at` / `crontab` / 后台 `sleep` 的降级策略，并把失败原因明确打印出来。3. 把“提醒依赖本机存活、不同桌面环境通知行为可能不同、系统级提示音不可完全由仓库侧控制”等边界条件写进文档，避免把 best-effort 当成强保证。
 解决时间：待完成后补充，格式为 `YYYY-MM-DD HH:MM:SS`。
 解决方案：待完成后补充最终落地方案与实际改动。
+
+13. YAML fallback 修复会误改 `detail_markdown` 中的 markdown 正文（待处理）
+标签：`优先级=P1；问题类型=正确性`
+问题：基于 2026-08-04 当前 staged 代码状态，`src/utils_zp/cli/_yaml_index.py` 新增的 `_quote_markdown_plain_scalars()` 会在 `yaml.safe_load()` 失败后，对全文所有包含 `: \`` 的行做字符串级重写。这样虽然能把 `summary: \`zpdata 10\` ...` 这类非法 plain scalar 修成可解析 YAML，但也会误处理 `detail_markdown: |` 这类 block scalar 里的普通 markdown 行。例如同一份 YAML 中若同时出现非法 `summary` 和正文 `- path: \`exp/01\``，fallback 后正文会被改成 `- path:  \"\`exp/01\`\"`；进一步在 `mark/unmark` 等“读入再写回”路径中，这种误改会被持久化回索引文件，造成详情正文被静默污染。
+代码：`src/utils_zp/cli/_yaml_index.py`
+建议方案：1. 不要对整份文本做逐行无上下文替换，改为只在明确的目标字段上做最小修复，且跳过 block scalar 内容。2. 为包含 `detail_markdown: |` 和反引号行的混合 YAML 补最小回归测试，覆盖“仅读取”和“读取后写回”两条路径。3. 如需继续做文本级容错，至少先按 YAML 结构或缩进态跟踪当前是否处于 block scalar，避免误改 markdown 正文。
+解决时间：待完成后补充，格式为 `YYYY-MM-DD HH:MM:SS`。
+解决方案：待完成后补充最终落地方案与实际改动。

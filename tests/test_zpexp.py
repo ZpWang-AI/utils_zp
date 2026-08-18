@@ -10,6 +10,7 @@ import yaml
 
 from utils_zp import setting
 from utils_zp.cli import zpexp
+from utils_zp.cli._yaml_index import set_mark_status
 
 
 class ZPExpCLITests(unittest.TestCase):
@@ -308,6 +309,77 @@ class ZPExpCLITests(unittest.TestCase):
             f"Target exp versions path: {versions_path}\n"
             "id | 重要性 | 进度 | 名称 | 简要说明\n"
             "7 | T1 | 5/7 | data6 蒸馏消融 | `zpdata 10` softlabel 已生成完成；当前已完成 teacher\n",
+        )
+
+    def test_main_preserves_detail_markdown_lines_when_summary_needs_fallback_repair(self) -> None:
+        with TemporaryDirectory() as tmp_dir:
+            exp_root = Path(tmp_dir) / "exp"
+            exp_root.mkdir()
+            versions_path = exp_root / "exp_versions.yaml"
+            versions_path.write_text(
+                "title: demo\n"
+                "versions:\n"
+                "  - id: 7\n"
+                "    name: data6 蒸馏消融\n"
+                "    importance: T1\n"
+                "    progress: 5／7\n"
+                "    summary: `zpdata 10` softlabel 已生成完成；当前已完成 teacher\n"
+                "    target_path: exp/07-data6-distill_ablation/\n"
+                "    marked: true\n"
+                "    detail_markdown: |\n"
+                "      - 路径: `exp/07-data6-distill_ablation/`\n"
+                "      - 说明: 保持原样\n",
+                encoding="utf-8",
+            )
+
+            with mock.patch.object(setting, "TARGET_EXP_PATH", exp_root):
+                stdout = io.StringIO()
+                with redirect_stdout(stdout):
+                    exit_code = zpexp.main(["7"])
+
+        self.assertEqual(exit_code, 0)
+        self.assertEqual(
+            stdout.getvalue(),
+            f"Target exp versions path: {versions_path}\n"
+            "\n"
+            "ID: 7\n"
+            "名称: data6 蒸馏消融\n"
+            "重要性: T1\n"
+            "进度: 5/7\n"
+            "简要说明: `zpdata 10` softlabel 已生成完成；当前已完成 teacher\n"
+            "目标路径: exp/07-data6-distill_ablation/\n"
+            "\n"
+            "- 路径: `exp/07-data6-distill_ablation/`\n"
+            "- 说明: 保持原样\n",
+        )
+
+    def test_set_mark_status_preserves_detail_markdown_lines_when_summary_needs_fallback_repair(self) -> None:
+        with TemporaryDirectory() as tmp_dir:
+            versions_path = Path(tmp_dir) / "exp_versions.yaml"
+            versions_path.write_text(
+                "title: demo\n"
+                "versions:\n"
+                "  - id: 7\n"
+                "    name: data6 蒸馏消融\n"
+                "    importance: T1\n"
+                "    progress: 5／7\n"
+                "    summary: `zpdata 10` softlabel 已生成完成；当前已完成 teacher\n"
+                "    target_path: exp/07-data6-distill_ablation/\n"
+                "    marked: false\n"
+                "    detail_markdown: |\n"
+                "      - 路径: `exp/07-data6-distill_ablation/`\n"
+                "      - 说明: 保持原样\n",
+                encoding="utf-8",
+            )
+
+            item = set_mark_status(versions_path, 7, True)
+            document = yaml.safe_load(versions_path.read_text(encoding="utf-8"))
+
+        self.assertEqual(item["detail_markdown"], "- 路径: `exp/07-data6-distill_ablation/`\n- 说明: 保持原样")
+        self.assertTrue(document["versions"][0]["marked"])
+        self.assertEqual(
+            document["versions"][0]["detail_markdown"],
+            "- 路径: `exp/07-data6-distill_ablation/`\n- 说明: 保持原样",
         )
 
     def test_main_marks_experiment_when_requested(self) -> None:

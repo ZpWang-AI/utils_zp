@@ -3,6 +3,7 @@ from __future__ import annotations
 """Helpers for reading structured YAML index files used by CLI commands."""
 
 import json
+import re
 from pathlib import Path
 from typing import Any
 
@@ -25,9 +26,30 @@ def _str_presenter(dumper: _YamlDumper, data: str) -> yaml.ScalarNode:
 _YamlDumper.add_representer(str, _str_presenter)
 
 
+_BLOCK_SCALAR_RE = re.compile(r"^\s*[^#\n][^:]*:\s*[>|][+-]?\s*$")
+
+
+def _leading_spaces(line: str) -> int:
+    return len(line) - len(line.lstrip(" "))
+
+
 def _quote_markdown_plain_scalars(text: str) -> str:
     repaired_lines: list[str] = []
+    block_scalar_indent: int | None = None
     for line in text.splitlines():
+        if block_scalar_indent is not None:
+            stripped_line = line.strip()
+            if stripped_line and _leading_spaces(line) <= block_scalar_indent:
+                block_scalar_indent = None
+            else:
+                repaired_lines.append(line)
+                continue
+
+        if _BLOCK_SCALAR_RE.match(line):
+            repaired_lines.append(line)
+            block_scalar_indent = _leading_spaces(line)
+            continue
+
         if ": `" not in line:
             repaired_lines.append(line)
             continue
@@ -108,18 +130,50 @@ def get_target_path(item: dict[str, Any]) -> str:
     return str(item.get("target_path", "")).strip()
 
 
-def set_mark_status(index_path: Path, version_id: int, marked: bool, item_key: str = "versions") -> dict[str, Any]:
+def _find_item_by_id(items: list[Any], target_id: str, nested_key: str = "derived_versions") -> dict[str, Any] | None:
+    for item in items:
+        if not isinstance(item, dict):
+            continue
+        if normalize_version_id(item.get("id", "")) == target_id:
+            return item
+        nested_items = item.get(nested_key)
+        if isinstance(nested_items, list):
+            found = _find_item_by_id(nested_items, target_id, nested_key)
+            if found is not None:
+                return found
+    return None
+
+
+def _find_item_by_alias(items: list[Any], target_id: str, nested_key: str = "derived_versions") -> dict[str, Any] | None:
+    for item in items:
+        if not isinstance(item, dict):
+            continue
+        for alias_key in ("derived_id", "legacy_version_id"):
+            if normalize_version_id(item.get(alias_key, "")) == target_id:
+                return item
+        nested_items = item.get(nested_key)
+        if isinstance(nested_items, list):
+            found = _find_item_by_alias(nested_items, target_id, nested_key)
+            if found is not None:
+                return found
+    return None
+
+
+def set_mark_status(index_path: Path, version_id: str | int, marked: bool, item_key: str = "versions") -> dict[str, Any]:
     document = load_yaml_document(index_path)
     items = document.get(item_key)
     if not isinstance(items, list):
         raise ValueError(f"missing yaml item list `{item_key}`: {index_path}")
 
-    target_id = str(version_id)
-    for item in items:
-        if not isinstance(item, dict):
-            continue
-        if normalize_version_id(item.get("id", "")) != target_id:
-            continue
+    target_id = normalize_version_id(version_id)
+    item = _find_item_by_id(items, target_id)
+    if item is not None and normalize_version_id(item.get("derived_id", "")):
+        alias_item = _find_item_by_alias(items, target_id)
+        if alias_item is not None:
+            item = alias_item
+    if item is None:
+        item = _find_item_by_alias(items, target_id)
+    if item is not None:
         item["marked"] = marked
         save_yaml_document(index_path, document)
         return item
