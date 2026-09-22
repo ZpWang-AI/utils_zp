@@ -26,6 +26,7 @@ class MainCLITests(unittest.TestCase):
                     "  zpbashrc: 更新 ~/.bashrc",
                     "  zpburn: 持续占用指定 GPU 到目标利用率",
                     "  zpjobs: 查看当前 jobs 清单",
+                    "  zppshell: 生成并行任务 shell",
                     "  # local cmd",
                     "  zpexp: 查看 exp/exp_versions.yaml 里标记的实验",
                     "  zpdata: 查看 data/dataset_versions.yaml 里标记的数据集",

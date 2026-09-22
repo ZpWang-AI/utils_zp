@@ -13,6 +13,7 @@ Current CLI commands:
 - `zpdata`: show marked datasets from `data/dataset_versions.yaml`; use `zpdata 7` or `zpdata 11.1` to print one dataset detail, or `zpdata --full` to list all datasets
 - `zpexp`: show marked experiments from `exp/exp_versions.yaml`; use `zpexp 4` to print one experiment detail, or `zpexp --full` to list all experiments
 - `zpjobs`: show a concise list of agent jobs; use `zpjobs 4` to print one job section, or `zpjobs --full` for the full document
+- `zppshell`: generate a reusable parallel shell wrapper from `name|gpu|command` task specs
 - `zppremodel` / `zppremodels`: show marked pretrained models from `pretrained_models/model_versions.yaml`; use `zppremodel 3` to print one model detail, or `zppremodel --full` to list all models
 - `zprules`: print the full path of `agent_zp/README.agent.md`, then print its content
 - the four YAML-backed commands also support `-m/--mark <id>` and `-um/--unmark <id>` to update the `marked` field in place
@@ -65,6 +66,9 @@ zpexp 4
 # print one job and its description
 zpjobs 4
 
+# generate a parallel shell wrapper
+zppshell --output tmp/run_parallel.sh --task 'demo|0|echo hello'
+
 # print one pretrained model detail
 zppremodels 3
 
@@ -78,3 +82,20 @@ zprules
 ## Feishu docs
 
 For Feishu doc/wiki reading and writing, use the authenticated `lark-cli` workflow as the default path. Keep `utils_zp` focused on local CLI helpers and do not route Feishu sync through browser automation prechecks in this repo.
+
+## Parallel shell API
+
+For code-level reuse, prefer the callable API instead of shelling out to the CLI:
+
+~~~python
+from utils_zp.parallel_shell import TaskSpec, generate_parallel_shell
+
+generate_parallel_shell(
+    output="tmp/run_parallel.sh",
+    workdir=".",
+    tasks=[
+        TaskSpec(name="train", gpu=0, command="python train.py"),
+        TaskSpec(name="eval", gpu=1, command="python eval.py"),
+    ],
+)
+~~~

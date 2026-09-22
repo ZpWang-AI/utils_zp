@@ -42,4 +42,5 @@
 - 安装共享 bashrc：`zpbashrc`
 - 启动 GPU idle burn：`zpburn <gpu_id>`
 - 模块化执行 jobs 打印：`python -m utils_zp.cli.zpjobs`
+- 生成并行任务 shell：`zppshell --output tmp/run_parallel.sh --task 'demo|0|echo hello'`
 - 模块化执行规则打印：`python -m utils_zp.cli.zprules`

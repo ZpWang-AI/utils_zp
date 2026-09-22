@@ -15,6 +15,7 @@
 
 - 需要结构化分流的专项工作，统一看 `agent_zp/jobs.agent.md`。
 - 需要快速查看当前支持的 jobs 时，可直接运行 `zpjobs`。
+- 需要批量生成并行任务启动脚本时，可直接运行 `zppshell`。
 - 当前 jobs 覆盖：`commit message`、`code review`、`训练/测试任务`、`查看运行状态`、`整理实验结果`、`阶段总结 / 交接`、`history 留痕`、`history 总结`、`项目文档整理`、`agent 文档归档`、`清理无用文件`。
 
 ## 触发词

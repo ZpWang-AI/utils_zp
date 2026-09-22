@@ -25,6 +25,14 @@ class DatasetInfo:
     size: str
     summary: str
     target_path: str
+    train_size: str = ""
+    valid_size: str = ""
+    eval_size: str = ""
+    train_query_count: str = ""
+    valid_query_count: str = ""
+    eval_query_count: str = ""
+    source_data_paths: list[str] | None = None
+    build_scripts: list[str] | None = None
 
 
 def _iter_dataset_items(items: list[dict[str, Any]]) -> list[dict[str, Any]]:
@@ -47,12 +55,28 @@ def _build_dataset_info(item: dict[str, Any], *, display_id: str | None = None) 
     target_path = get_target_path(item)
     if not dataset_id or not name or not size or not summary or not target_path:
         return None
+    train_size = str(item.get("train_size", "")).strip()
+    valid_size = str(item.get("valid_size", "")).strip()
+    eval_size = str(item.get("eval_size", "")).strip()
+    train_query_count = str(item.get("train_query_count", "")).strip()
+    valid_query_count = str(item.get("valid_query_count", "")).strip()
+    eval_query_count = str(item.get("eval_query_count", "")).strip()
+    source_data_paths = item.get("source_data_paths")
+    build_scripts = item.get("build_scripts")
     return DatasetInfo(
         dataset_id=dataset_id,
         name=name,
         size=size,
         summary=summary,
         target_path=target_path,
+        train_size=train_size,
+        valid_size=valid_size,
+        eval_size=eval_size,
+        train_query_count=train_query_count,
+        valid_query_count=valid_query_count,
+        eval_query_count=eval_query_count,
+        source_data_paths=source_data_paths,
+        build_scripts=build_scripts,
     )
 
 
@@ -353,8 +377,34 @@ def main(argv: list[str] | None = None) -> int:
         print(f"ID: {dataset.dataset_id}")
         print(f"名称: {dataset.name}")
         print(f"数据量: {dataset.size}")
+        if dataset.train_size:
+            print(f"训练集: {dataset.train_size}")
+        if dataset.valid_size:
+            print(f"验证集: {dataset.valid_size}")
+        if dataset.eval_size:
+            print(f"评测集: {dataset.eval_size}")
         print(f"简要说明: {dataset.summary}")
         print(f"目标路径: {dataset.target_path}")
+
+        if dataset.train_query_count or dataset.valid_query_count or dataset.eval_query_count:
+            parts = []
+            if dataset.train_query_count:
+                parts.append(f"train: {dataset.train_query_count}")
+            if dataset.valid_query_count:
+                parts.append(f"valid: {dataset.valid_query_count}")
+            if dataset.eval_query_count:
+                parts.append(f"eval: {dataset.eval_query_count}")
+            print(f"Query 数: {', '.join(parts)}")
+
+        if dataset.source_data_paths:
+            print("数据来源:")
+            for p in dataset.source_data_paths:
+                print(f"  - {p}")
+
+        if dataset.build_scripts:
+            print("构建脚本:")
+            for s in dataset.build_scripts:
+                print(f"  - {s}")
 
         parent_context = _format_parent_context(root_items, all_items, dataset_item)
         if parent_context is not None:

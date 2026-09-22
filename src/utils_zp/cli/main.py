@@ -9,6 +9,7 @@ def main() -> int:
     print("  zpbashrc: 更新 ~/.bashrc")
     print("  zpburn: 持续占用指定 GPU 到目标利用率")
     print("  zpjobs: 查看当前 jobs 清单")
+    print("  zppshell: 生成并行任务 shell")
     print("  # local cmd")
     print("  zpexp: 查看 exp/exp_versions.yaml 里标记的实验")
     print("  zpdata: 查看 data/dataset_versions.yaml 里标记的数据集")
